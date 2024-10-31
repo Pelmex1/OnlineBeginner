@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using CustomEventBus;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -11,7 +11,6 @@ public class GameMenu : MonoBehaviour
     private const string SoundPreference = "isSoundOn";
     private const float VolumeOn = 0f;
     private const float VolumeOff = -80f;
-    [SerializeField] private GameObject panelOfButtons;
     [SerializeField] private Image[] allImages = new Image[3];
     [SerializeField] private TMP_Text[] _textOfButtons = new TMP_Text[2];
     [SerializeField] private GameObject exitPanel;
@@ -25,8 +24,6 @@ public class GameMenu : MonoBehaviour
     [SerializeField] private TMP_Text _moneyText;
 
     private bool isSoundActive = false;
-    private Image[] _buttonsImage = new Image[16];
-    private TMP_Text[] _buttonsText = new TMP_Text[16];
 
     public float totalTime = 30f;
 
@@ -34,9 +31,12 @@ public class GameMenu : MonoBehaviour
     {
         InitializeAudioSettings();
         Time.timeScale = 1f;
-        _buttonsImage = panelOfButtons.GetComponentsInChildren<Image>();
-        _buttonsText = panelOfButtons.GetComponentsInChildren<TMP_Text>();
     }
+    public void OnMessageReceived(string message)
+    {
+        Console.WriteLine($"Received message: {message}");
+    }
+
     private void InitializeAudioSettings()
     {
         int soundStatus = PlayerPrefs.GetInt(SoundPreference, 1);
@@ -107,12 +107,9 @@ public class GameMenu : MonoBehaviour
     {
         if (Condition == true)
         {
-            for (int i = 0; i < _buttonsImage.Length; i++)
+            for (int i = 0; i < allImages.Length; i++)
             {
                 Color color = Color.gray;
-                _buttonsImage[i].color = color;
-                if (i < _buttonsImage.Length - 1)
-                    _buttonsText[i].color = color;
                 if (i < allImages.Length)
                     allImages[i].color = color;
                 if (i < _textOfButtons.Length)
@@ -121,12 +118,9 @@ public class GameMenu : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < _buttonsImage.Length; i++)
+            for (int i = 0; i < allImages.Length; i++)
             {
                 Color color = Color.white;
-                _buttonsImage[i].color = color;
-                if (i < _buttonsImage.Length - 1)
-                    _buttonsText[i].color = color;
                 if (i < allImages.Length)
                     allImages[i].color = color;
                 if (i < _textOfButtons.Length)
