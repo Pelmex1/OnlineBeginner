@@ -2,25 +2,39 @@ using Photon.Pun;
 using UnityEngine;
 using Photon.Realtime;
 namespace OnlineBeginner.Miltiplayer{
-public class LaunchSesion : MonoBehaviourPunCallbacks
+public class Lobby : MonoBehaviourPunCallbacks
     {
-        [SerializeField] private GameObject _ErrorPanel;
-        private void Start()
-        {
+        private void Awake() {
+            PhotonNetwork.AutomaticallySyncScene = true;
+        }
+        private void Start() {
             PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
         }
         public override void OnConnectedToMaster()
         {
             Debug.Log("Succefully conected to server!");
         }
+        public override void OnDisconnected(DisconnectCause cause)
+        {
+            Debug.Log("You disconected, reason: " + cause);
+            //Когда не удалось подключится к сети
+        }
         public void OnClickOnMultiplayer(){
-            PhotonNetwork.AutomaticallySyncScene = true;
             if(PhotonNetwork.IsConnected){
                 //включается панелька сетевой игры
             } else {
                 PhotonNetwork.ConnectUsingSettings();
-                PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
             }
+        }
+        public override void OnCreatedRoom()
+        {
+            Debug.Log("Seccesufuly crteate a room");
+            //Когда создалась комната
+        }
+        public override void OnCreateRoomFailed(short returnCode, string message)
+        {
+            Debug.Log("Failed to create room:" + message);
         }
         public override void OnJoinedLobby()
         {
@@ -30,17 +44,28 @@ public class LaunchSesion : MonoBehaviourPunCallbacks
         {
             //Не удалось найти комнату
         }
-        public override void OnDisconnected(DisconnectCause cause)
-        {
-            //Когда не удалось подключится к сети
-        }
+
 
         public void ConectToLobby(){
-            PhotonNetwork.JoinRandomRoom();
+            if(PhotonNetwork.NickName != ""){
+                PhotonNetwork.JoinRandomRoom();
+            } else {
+                //нету имя
+            }
         }
         public void CreateLobby(){
-            PhotonNetwork.CreateRoom($"{PhotonNetwork.NickName}",new RoomOptions{ MaxPlayers = 2});
-            //Включается UI лобби (без игроков)
+            PhotonNetwork.CreateRoom($"{PhotonNetwork.NickName}", new RoomOptions
+            { 
+                MaxPlayers = 2,
+                IsOpen = true,
+                IsVisible = true
+            });
+            //Включается UI лобби 
+        }
+        public void Test(){
+            if(Input.GetKeyDown(KeyCode.T)){
+                //панелька теста
+            }
         }
 
     }
