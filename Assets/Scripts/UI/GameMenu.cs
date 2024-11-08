@@ -43,8 +43,9 @@ public class GameMenu : MonoBehaviour
         if (soundStatus == 1)
         {
             mainAudioMixer.SetFloat("MasterVolume", VolumeOn);
-            audioSources[0].Play();
-            audioSources[1].Play();
+            for(int i = 0; i < audioSources.Length; i++){
+                audioSources[i].Play();
+            }
         }
         else
         {
