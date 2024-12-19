@@ -23,7 +23,12 @@ namespace OnlineBeginner.Multiplayer
         }
         public void JoinRandomRoom()
         {
-            PhotonNetwork.JoinRandomRoom();
+            if(PhotonNetwork.IsConnected){
+                PhotonNetwork.JoinRandomRoom();
+            } else {
+                PhotonNetwork.ConnectUsingSettings();
+                PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
+            }
         }
         public override void OnJoinedRoom()
         {
