@@ -12,6 +12,8 @@ namespace OnlineBeginner.Multiplayer
         [SerializeField] TMP_InputField _createRoom;
         [SerializeField] TMP_Text _infoText;
         private bool _isTwoPlayersInRoom;
+        private bool _isCreatedRoom = false;
+        private bool _isConnectedToMasterClient = false;
         private void Awake()
         {
             PhotonNetwork.AutomaticallySyncScene = true;
@@ -23,11 +25,13 @@ namespace OnlineBeginner.Multiplayer
         }
         public void JoinRandomRoom()
         {
-            if(PhotonNetwork.IsConnected){
-                PhotonNetwork.JoinRandomRoom();
-            } else {
-                PhotonNetwork.ConnectUsingSettings();
-                PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
+            if(!_isCreatedRoom){
+                if(_isConnectedToMasterClient){
+                    PhotonNetwork.JoinRandomRoom();
+                } else {
+                    PhotonNetwork.ConnectUsingSettings();
+                    PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
+                }
             }
         }
         public override void OnJoinedRoom()
@@ -47,9 +51,12 @@ namespace OnlineBeginner.Multiplayer
         {
             RoomOptions roomOptions = new()
             {
-                MaxPlayers = 2
+                MaxPlayers = 2,
+                IsOpen = true,
+                IsVisible = true
             };
             PhotonNetwork.CreateRoom(_createRoom.text,roomOptions);
+            _isCreatedRoom = true;
         }
         public override void OnCreatedRoom()
         {
@@ -62,6 +69,7 @@ namespace OnlineBeginner.Multiplayer
         public override void OnConnectedToMaster()
         {
             Debug.Log("Succefully conected to server!");
+            _isConnectedToMasterClient = true;
         }
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
