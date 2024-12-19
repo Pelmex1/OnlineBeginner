@@ -1,72 +1,60 @@
 using Photon.Pun;
 using UnityEngine;
 using Photon.Realtime;
-namespace OnlineBeginner.Miltiplayer{
-public class Lobby : MonoBehaviourPunCallbacks
+using UnityEngine.UI;
+using TMPro;
+using System.Collections;
+using System.Runtime.InteropServices;
+namespace OnlineBeginner.Multiplayer
+{
+    public class Lobby : MonoBehaviourPunCallbacks
     {
-        private void Awake() {
+        [SerializeField] GameObject _createRoomPanel;
+        [SerializeField] GameObject _loadingScene;
+        [SerializeField] TMP_InputField _createRoom;
+        [SerializeField] TMP_Text _infoText;
+        private void Awake()
+        {
             PhotonNetwork.AutomaticallySyncScene = true;
         }
-        private void Start() {
+        private void Start()
+        {
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
         }
-        public override void OnConnectedToMaster()
+        public void JoinRandomRoom()
         {
-            Debug.Log("Succefully conected to server!");
+            PhotonNetwork.JoinRandomRoom();
         }
-        public override void OnDisconnected(DisconnectCause cause)
+        public override void OnJoinedRoom()
         {
-            Debug.Log("You disconected, reason: " + cause);
-            //Когда не удалось подключится к сети
+            StartCoroutine(Wait());
         }
-        public void OnClickOnMultiplayer(){
-            if(PhotonNetwork.IsConnected){
-                //включается панелька сетевой игры
-            } else {
-                PhotonNetwork.ConnectUsingSettings();
-            }
+        public override void OnJoinRandomFailed(short returnCode, string message)
+        {
+            _createRoomPanel.SetActive(true);
+            _infoText.text = "Faild To Join Game. Try to crate new";
         }
         public override void OnCreatedRoom()
         {
+            RoomOptions roomOptions = new RoomOptions();
+            roomOptions.MaxPlayers = 2;
+            PhotonNetwork.CreateRoom(_createRoom.text,roomOptions);
             Debug.Log("Seccesufuly crteate a room");
-            //Когда создалась комната
         }
         public override void OnCreateRoomFailed(short returnCode, string message)
         {
             Debug.Log("Failed to create room:" + message);
         }
-        public override void OnJoinedLobby()
+        public override void OnConnectedToMaster()
         {
-            
+            Debug.Log("Succefully conected to server!");
         }
-        public override void OnJoinRandomFailed(short returnCode, string message)
+        private IEnumerator Wait()
         {
-            //Не удалось найти комнату
+            _loadingScene.SetActive(true);
+            yield return new WaitForSecondsRealtime(5);    
+            PhotonNetwork.LoadLevel("GameScene");
         }
-
-
-        public void ConectToLobby(){
-            if(PhotonNetwork.NickName != ""){
-                PhotonNetwork.JoinRandomRoom();
-            } else {
-                //нету имя
-            }
-        }
-        public void CreateLobby(){
-            PhotonNetwork.CreateRoom($"{PhotonNetwork.NickName}", new RoomOptions
-            { 
-                MaxPlayers = 2,
-                IsOpen = true,
-                IsVisible = true
-            });
-            //Включается UI лобби 
-        }
-        public void Test(){
-            if(Input.GetKeyDown(KeyCode.T)){
-                //панелька теста
-            }
-        }
-
     }
 }
