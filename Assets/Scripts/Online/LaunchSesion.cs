@@ -1,10 +1,8 @@
 using Photon.Pun;
 using UnityEngine;
 using Photon.Realtime;
-using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using System.Runtime.InteropServices;
 namespace OnlineBeginner.Multiplayer
 {
     public class Lobby : MonoBehaviourPunCallbacks
@@ -13,6 +11,7 @@ namespace OnlineBeginner.Multiplayer
         [SerializeField] GameObject _loadingScene;
         [SerializeField] TMP_InputField _createRoom;
         [SerializeField] TMP_Text _infoText;
+        private bool _isTwoPlayersInRoom;
         private void Awake()
         {
             PhotonNetwork.AutomaticallySyncScene = true;
@@ -28,19 +27,28 @@ namespace OnlineBeginner.Multiplayer
         }
         public override void OnJoinedRoom()
         {
-            StartCoroutine(Wait());
+            if(PhotonNetwork.PlayerList.Length > 1){
+                Wait();
+            }
         }
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
+            Debug.Log("Failed to load any room");
             _createRoomPanel.SetActive(true);
             _infoText.text = "Faild To Join Game. Try to crate new";
+            CreateRoom();
+        }
+        private void CreateRoom()
+        {
+            RoomOptions roomOptions = new()
+            {
+                MaxPlayers = 2
+            };
+            PhotonNetwork.CreateRoom(_createRoom.text,roomOptions);
         }
         public override void OnCreatedRoom()
         {
-            RoomOptions roomOptions = new RoomOptions();
-            roomOptions.MaxPlayers = 2;
-            PhotonNetwork.CreateRoom(_createRoom.text,roomOptions);
-            Debug.Log("Seccesufuly crteate a room");
+            Debug.Log("Seccesufuly create a room");
         }
         public override void OnCreateRoomFailed(short returnCode, string message)
         {
@@ -50,10 +58,30 @@ namespace OnlineBeginner.Multiplayer
         {
             Debug.Log("Succefully conected to server!");
         }
-        private IEnumerator Wait()
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            Debug.Log("Player entered on room");
+            _isTwoPlayersInRoom = true;
+            Wait();
+        }
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            _isTwoPlayersInRoom = false;
+        }
+        private void Wait()
         {
             _loadingScene.SetActive(true);
-            yield return new WaitForSecondsRealtime(5);    
+            for(int i = 5; i > 0; i--){
+                if(_isTwoPlayersInRoom){
+                    Debug.Log("Старт через: " + i);
+                } else {
+                    break;
+                }
+            }
+            if(!_isTwoPlayersInRoom)
+            {
+                return;
+            }
             PhotonNetwork.LoadLevel("GameScene");
         }
     }

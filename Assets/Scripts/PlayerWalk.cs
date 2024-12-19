@@ -9,8 +9,7 @@ public class PlayerWalk : MonoBehaviour
     private Rigidbody _rb;
     private LinkedList<float> positions;
     private LinkedListNode<float> _localPosition;
-    private float _localIndex = 0;
-    private float index = 5;
+    private readonly float index = 5;
     private void Start() {
         _rb = GetComponent<Rigidbody>();
         positions = new LinkedList<float>(new[] {transform.position.z - index, transform.position.z, transform.position.z + index});

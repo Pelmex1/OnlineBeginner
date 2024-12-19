@@ -2878,7 +2878,7 @@ PrefabInstance:
     - target: {fileID: 8986778078849804520, guid: dfc791cae673ad54f95dfb5d7dac7c30,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnJoinedRoom
+      value: JoinRandomRoom
       objectReference: {fileID: 0}
     - target: {fileID: 8986778078849804520, guid: dfc791cae673ad54f95dfb5d7dac7c30,
         type: 3}
