@@ -75,27 +75,28 @@ namespace OnlineBeginner.Multiplayer
         {
             Debug.Log("Player entered on room");
             _isTwoPlayersInRoom = true;
-            Wait();
+            StartCoroutine(Wait());
         }
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
             _isTwoPlayersInRoom = false;
         }
-        private void Wait()
+        private IEnumerator Wait()
         {
             _loadingScene.SetActive(true);
             for(int i = 5; i > 0; i--){
                 if(_isTwoPlayersInRoom){
                     Debug.Log("Старт через: " + i);
-                } else {
-                    break;
-                }
+                    yield return new WaitForSecondsRealtime(1);
+                    if(_isTwoPlayersInRoom && i == 1)
+                    {
+                        PhotonNetwork.LoadLevel("GameScene");
+                    } else {
+                        break;
+                    }
             }
-            if(!_isTwoPlayersInRoom)
-            {
-                return;
-            }
-            PhotonNetwork.LoadLevel("GameScene");
+
         }
     }
+}
 }

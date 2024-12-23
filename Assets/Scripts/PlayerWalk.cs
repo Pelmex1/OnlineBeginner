@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,10 +10,11 @@ public class PlayerWalk : MonoBehaviour
     private Rigidbody _rb;
     private LinkedList<float> positions;
     private LinkedListNode<float> _localPosition;
-    private readonly float index = 5;
+    private readonly float _index = 5;
+    private bool _cooldown = false;
     private void Start() {
         _rb = GetComponent<Rigidbody>();
-        positions = new LinkedList<float>(new[] {transform.position.z - index, transform.position.z, transform.position.z + index});
+        positions = new LinkedList<float>(new[] {transform.position.z - _index, transform.position.z, transform.position.z + _index});
         _localPosition = positions.First; _localPosition = _localPosition.Next;
     }
     private void FixedUpdate() {
@@ -25,7 +27,7 @@ public class PlayerWalk : MonoBehaviour
         _rb.MovePosition(_rb.position + _speed * Time.fixedDeltaTime * -transform.right);
     }
     private void ChangePosition(float horizontal){
-        if(horizontal == 0) {return;}
+        if(horizontal == 0 || _cooldown) {return;}
         LinkedListNode<float> pos;
         if(horizontal == 1){
             pos = _localPosition.Next;
@@ -38,5 +40,11 @@ public class PlayerWalk : MonoBehaviour
                 _localPosition = pos;
             }
         }
+        StartCoroutine(Cooldown());
+    }
+    private IEnumerator Cooldown(){
+        _cooldown = true;
+        yield return new WaitForSecondsRealtime(Time.fixedDeltaTime * 10);
+        _cooldown = false;
     }
 }
