@@ -5,6 +5,7 @@ public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private Transform _startSpawnaning;
     [SerializeField] private GameObject _prefab;
+    [SerializeField] private Quaternion rotation;
     private float[] _positions;
     private List<float> _three_positions;
     private int _indexX = 0;
@@ -23,7 +24,7 @@ public class MapGenerator : MonoBehaviour
             _three_positions.Remove(randomZ);
             index++;
             Vector3 randomPosition = new (transform.position.x+_indexX, _startSpawnaning.position.y, randomZ);
-            Instantiate(_prefab, randomPosition, Quaternion.identity);
+            Instantiate(_prefab, randomPosition, rotation);
         }
         _indexX += 6;
     }
