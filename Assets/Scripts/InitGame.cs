@@ -1,6 +1,5 @@
-/*using CustomEventBus;
+using CustomEventBus;
 using System;
-using Game.Characters;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,20 +7,18 @@ namespace Game.Level
 {
     public class InitGame : MonoBehaviour
     {
-        [SerializeField] private UserInterface _userInterface;
-        [SerializeField] private SceneController _sceneController;
-        [SerializeField] private Player _player;
-        [SerializeField] private SpawnController _spawnController;
+        [SerializeField] private GameMenu _gameMenu;
+        [SerializeField] private EndGame _endGame;
+        [SerializeField] private PlayerWalk _player;
+        [SerializeField] private MapGenerator _spawnController;
 
         private EventBus _eventBus;
-        private ScoreController _scoreController;
 
         private List<IDisposable> _disposables = new();
 
         private void Awake()
         {
             _eventBus = new EventBus();
-            _scoreController = new ScoreController();
 
             RegisterServices();
             Init();
@@ -32,25 +29,23 @@ namespace Game.Level
         {
             ServiceLocator.Initialize();
             ServiceLocator.Current.Register(_eventBus);
-            ServiceLocator.Current.Register(_scoreController);
-            ServiceLocator.Current.Register<SceneController>(_sceneController);
-            ServiceLocator.Current.Register<UserInterface>(_userInterface);
-            ServiceLocator.Current.Register<Player>(_player);
-            ServiceLocator.Current.Register<SpawnController>(_spawnController);
+/*             ServiceLocator.Current.Register<GameMenu>(_gameMenu);
+            ServiceLocator.Current.Register<PlayerWalk>(_player);
+            ServiceLocator.Current.Register<MapGenerator>(_spawnController);
+            ServiceLocator.Current.Register<EndGame>(_endGame); */
         }
 
         private void Init()
         {
-            _scoreController.Init();
-            _sceneController.Init();
-            _userInterface.Init();
+            _gameMenu.Init();
             _player.Init();
             _spawnController.Init();
+            _endGame.Init();
         }
 
         private void AddDisposables()
         {
-            _disposables.Add(_scoreController);
+            //_disposables.Add(_scoreController);
         }
 
         private void OnDestroy()
@@ -61,4 +56,4 @@ namespace Game.Level
             }
         }
     }
-}*/
+}

@@ -9,7 +9,7 @@ public class MapGenerator : MonoBehaviour
     private float[] _positions;
     private List<float> _three_positions;
     private int _indexX = 0;
-    private void Start() {
+    public void Init() {
         _positions = new float[]{_startSpawnaning.position.z - 5,_startSpawnaning.position.z, _startSpawnaning.position.z + 5};
         for (int i = 0; i < 50; i++)
         {

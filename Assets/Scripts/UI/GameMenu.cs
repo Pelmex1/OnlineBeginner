@@ -27,7 +27,7 @@ public class GameMenu : MonoBehaviour
 
     public float totalTime = 30f;
 
-    private void Start()
+    public void Init()
     {
         InitializeAudioSettings();
         Time.timeScale = 1f;
