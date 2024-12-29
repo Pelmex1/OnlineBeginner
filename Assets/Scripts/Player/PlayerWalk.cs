@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using CustomEventBus;
+using OnlineBeginner.Online;
+using Photon.Pun;
 using UnityEngine;
 
-public class PlayerWalk : MonoBehaviour
+public class PlayerWalk : MonoBehaviourPun
 {
     [SerializeField] private float _speed;
     private const float PLUS_TO_SPEED = 0.1F;
@@ -15,17 +17,22 @@ public class PlayerWalk : MonoBehaviour
     private bool _cooldown = false;
     private EventBus eventBus;
     private bool IsEnd = false;
+    private CameraWork _cameraWork;
     public void Init()
     {
+        _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
         eventBus = ServiceLocator.Current.Get<EventBus>();
         eventBus.Subscribe<bool>(wasFinish => IsEnd = wasFinish);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         _localPosition = positions.First; _localPosition = _localPosition.Next;
+        if(photonView.IsMine){
+            _cameraWork.OnStartFollowing();
+        }
     }
     private void FixedUpdate()
     {
-        if (IsEnd != true)
+        if (PhotonNetwork.IsConnected && photonView.IsMine  && IsEnd != true)
         {
             _speed += PLUS_TO_SPEED;
             _horizontal = Input.GetAxisRaw("Horizontal");

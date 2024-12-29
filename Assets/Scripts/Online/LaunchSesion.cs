@@ -3,6 +3,7 @@ using UnityEngine;
 using Photon.Realtime;
 using TMPro;
 using System.Collections;
+using OnlineBeginner.Consts;
 namespace OnlineBeginner.Multiplayer
 {
     public class Lobby : MonoBehaviourPunCallbacks
@@ -13,23 +14,24 @@ namespace OnlineBeginner.Multiplayer
         [SerializeField] TMP_Text _infoText;
         private bool _isTwoPlayersInRoom;
         private bool _isCreatedRoom = false;
-        private bool _isConnectedToMasterClient = false;
+        private bool _isConnected;
         private void Awake()
         {
             PhotonNetwork.AutomaticallySyncScene = true;
         }
         private void Start()
         {
-            PhotonNetwork.ConnectUsingSettings();
+            _isConnected = PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
         }
         public void JoinRandomRoom()
         {
             if(!_isCreatedRoom){
-                if(_isConnectedToMasterClient){
+                if(_isConnected){
                     PhotonNetwork.JoinRandomRoom();
+                    _isConnected = false;
                 } else {
-                    PhotonNetwork.ConnectUsingSettings();
+                    _isConnected = PhotonNetwork.ConnectUsingSettings();
                     PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
                 }
             }
@@ -69,7 +71,6 @@ namespace OnlineBeginner.Multiplayer
         public override void OnConnectedToMaster()
         {
             Debug.Log("Succefully conected to server!");
-            _isConnectedToMasterClient = true;
         }
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
@@ -98,5 +99,9 @@ namespace OnlineBeginner.Multiplayer
 
         }
     }
-}
+        public override void OnDisconnected(DisconnectCause cause)
+        {
+            _isConnected = false;
+        }
+    }
 }
