@@ -3,6 +3,7 @@ using CustomEventBus;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -11,26 +12,31 @@ public class GameMenu : MonoBehaviour
     private const string SoundPreference = "isSoundOn";
     private const float VolumeOn = 0f;
     private const float VolumeOff = -80f;
-    [SerializeField] private Image[] allImages = new Image[3];
-    [SerializeField] private TMP_Text[] _textOfButtons = new TMP_Text[2];
     [SerializeField] private GameObject exitPanel;
-    [SerializeField] private GameObject gameDisplayPanel;
-    [SerializeField] private GameObject endGamePanel;
     [SerializeField] private AudioSource[] audioSources;
     [SerializeField] private AudioMixer mainAudioMixer;
     [SerializeField] private Button soundToggleButton;
     [SerializeField] private Sprite soundOnSprite;
     [SerializeField] private Sprite soundOffSprite;
-    [SerializeField] private TMP_Text _moneyText;
+    [SerializeField] private TMP_Text _timeText;
 
     private bool isSoundActive = false;
-
-    public float totalTime = 30f;
-
+    private bool isEnd = false;
+    private float time = 0;
+    private EventBus eventBus;
     public void Init()
     {
         InitializeAudioSettings();
         Time.timeScale = 1f;
+        eventBus = ServiceLocator.Current.Get<EventBus>();
+        eventBus.Subscribe<bool>(wasEnd => isEnd = wasEnd);
+    }
+    private void Update() {
+        while(isEnd == false)
+        {
+            time += Time.deltaTime;
+            _timeText.text = $"{(int)time}";
+        }
     }
     public void OnMessageReceived(string message)
     {
@@ -69,14 +75,12 @@ public class GameMenu : MonoBehaviour
     {
         audioSources[1].Play();
         exitPanel.SetActive(true);
-        ChangeColor(true);
     }
 
     public void CloseSettings()
     {
         audioSources[1].Play();
         exitPanel.SetActive(false);
-        ChangeColor(false);
     }
     public void ReturnToMainMenu()
     {
@@ -87,46 +91,5 @@ public class GameMenu : MonoBehaviour
     {
         audioSources[1].Play();
         SceneManager.LoadScene("GameScene");
-    }
-    public void ShowExitPanel()
-    {
-        Time.timeScale = 0f;
-        audioSources[1].Play();
-        gameDisplayPanel.SetActive(false);
-        exitPanel.SetActive(true);
-    }
-
-    public void HideExitPanel()
-    {
-        Time.timeScale = 1f;
-        audioSources[1].Play();
-        exitPanel.SetActive(false);
-        if (!endGamePanel.activeSelf)
-            gameDisplayPanel.SetActive(true);
-    }
-    private void ChangeColor(bool Condition)
-    {
-        if (Condition == true)
-        {
-            for (int i = 0; i < allImages.Length; i++)
-            {
-                Color color = Color.gray;
-                if (i < allImages.Length)
-                    allImages[i].color = color;
-                if (i < _textOfButtons.Length)
-                    _textOfButtons[i].color = color;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < allImages.Length; i++)
-            {
-                Color color = Color.white;
-                if (i < allImages.Length)
-                    allImages[i].color = color;
-                if (i < _textOfButtons.Length)
-                    _textOfButtons[i].color = color;
-            }
-        }
     }
 }
