@@ -9,6 +9,7 @@ public class MapGenerator : MonoBehaviour
     private float[] _positions;
     private List<float> _three_positions;
     private int _indexX = 0;
+    private readonly int _countAddDistance  = 15;
     public void Init() {
         _positions = new float[]{_startSpawnaning.position.z - 5,_startSpawnaning.position.z, _startSpawnaning.position.z + 5};
         for (int i = 0; i < 50; i++)
@@ -26,6 +27,6 @@ public class MapGenerator : MonoBehaviour
             Vector3 randomPosition = new (transform.position.x+_indexX, _startSpawnaning.position.y, randomZ);
             Instantiate(_prefab, randomPosition, rotation);
         }
-        _indexX += 6;
+        _indexX += _countAddDistance;
     }
 }
