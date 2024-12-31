@@ -19,6 +19,8 @@ public class GameMenu : MonoBehaviour
     [SerializeField] private Sprite soundOnSprite;
     [SerializeField] private Sprite soundOffSprite;
     [SerializeField] private TMP_Text _timeText;
+    [SerializeField] TMP_Text _bestTimeText;
+    [SerializeField] TMP_Text _yourTimeText;
 
     private bool isSoundActive = false;
     private bool isEnd = false;
@@ -29,14 +31,25 @@ public class GameMenu : MonoBehaviour
         InitializeAudioSettings();
         Time.timeScale = 1f;
         eventBus = ServiceLocator.Current.Get<EventBus>();
-        eventBus.Subscribe<bool>(wasEnd => isEnd = wasEnd);
+        eventBus.Subscribe<TimeSignal>(SetTime);
     }
-    private void Update() {
-        while(isEnd == false)
+    private void Update()
+    {
+        if (isEnd == false)
         {
             time += Time.deltaTime;
             _timeText.text = $"{(int)time}";
         }
+    }
+    private void SetTime(TimeSignal signal)
+    {
+        isEnd = signal.wasEnd;
+        int Itime = (int)time;
+        if (time <= PlayerPrefs.GetInt("BestTime", 200))
+            PlayerPrefs.SetInt("BestTime", Itime);
+        _bestTimeText.text = $"{PlayerPrefs.GetInt("BestTime", 200)}";
+        _yourTimeText.text = $"{Itime}";
+        PlayerPrefs.Save();
     }
     public void OnMessageReceived(string message)
     {
@@ -49,7 +62,8 @@ public class GameMenu : MonoBehaviour
         if (soundStatus == 1)
         {
             mainAudioMixer.SetFloat("MasterVolume", VolumeOn);
-            for(int i = 0; i < audioSources.Length; i++){
+            for (int i = 0; i < audioSources.Length; i++)
+            {
                 audioSources[i].Play();
             }
         }
