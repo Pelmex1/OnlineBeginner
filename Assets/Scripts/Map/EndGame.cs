@@ -9,6 +9,7 @@ public class EndGame : MonoBehaviour
 {
     [SerializeField] GameObject _endPanel;
     [SerializeField] TMP_Text _infoText;
+    [SerializeField] ParticleSystem[] _fireworks = new ParticleSystem[2];
     private EventBus eventBus;
     private int _placeOfPlayer = 0;
     public void Init()
@@ -23,6 +24,8 @@ public class EndGame : MonoBehaviour
             eventBus.Invoke(new TimeSignal(true));
             eventBus.Invoke<bool>(true);
             _endPanel.SetActive(true);
+            _fireworks[0].Play();
+            _fireworks[1].Play();
             switch(_placeOfPlayer)
             {
                 case 1:
