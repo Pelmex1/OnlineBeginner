@@ -1,5 +1,5 @@
 ﻿
-namespace CustomEventBus
+namespace OnlineBeginner.EventBus
 {
     public class CallbackWithPriority
     {

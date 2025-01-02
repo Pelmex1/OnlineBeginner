@@ -1,5 +1,6 @@
 using System;
 using CustomEventBus;
+using OnlineBeginner.EventBus.Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;

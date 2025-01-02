@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using OnlineBeginner.EventBus.Signals;
 using CustomEventBus;
-using JetBrains.Annotations;
 
 public class SwipeManager : MonoBehaviour
 {

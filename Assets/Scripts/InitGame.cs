@@ -1,6 +1,6 @@
-using CustomEventBus;
 using System;
 using System.Collections.Generic;
+using CustomEventBus;
 using UnityEngine;
 
 namespace Game.Level

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using CustomEventBus;
 using OnlineBeginner.Consts;
+using OnlineBeginner.EventBus.Signals;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -10,21 +12,12 @@ public class InGameScene : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject _playerPrefab;
     public static InGameScene instance;
-    public Transform[] Toches_of_spawn;
-    private void Awake()
-    {
-            
-            if (instance == null)
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-                return;
-            }
-    }
+    private Transform[] Toches_of_spawn;
+    private EventBus _eventBus;
+    private void Init(){
+        _eventBus = ServiceLocator.Current.Get<EventBus>();
+        _eventBus.Invoke(new GetPointsOfSpawn(ref Toches_of_spawn));
+    } 
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();

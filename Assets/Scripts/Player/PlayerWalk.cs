@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using CustomEventBus;
@@ -15,15 +16,15 @@ public class PlayerWalk : MonoBehaviourPun
     private LinkedListNode<float> _localPosition;
     private readonly float _index = 5;
     private bool _cooldown = false;
-    private EventBus eventBus;
+    private EventBus _eventBus;
     private bool IsEnd = false;
     private CameraWork _cameraWork;
     public void Init()
     {
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
-        eventBus = ServiceLocator.Current.Get<EventBus>();
-        eventBus.Subscribe<bool>(wasFinish => IsEnd = wasFinish);
+        _eventBus = ServiceLocator.Current.Get<EventBus>();
+        _eventBus.Subscribe<bool>(wasFinish => IsEnd = wasFinish);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         _localPosition = positions.First; _localPosition = _localPosition.Next;
         if(photonView.IsMine){
