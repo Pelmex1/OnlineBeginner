@@ -12,7 +12,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject _playerPrefab;
     public static InGameScene instance;
-    private Transform[] Toches_of_spawn;
+    private Transform Toches_of_spawn;
     private EventBus _eventBus;
     private void Init(){
         _eventBus = ServiceLocator.Current.Get<EventBus>();
@@ -26,21 +26,13 @@ public class InGameScene : MonoBehaviourPunCallbacks
     {
         SceneManager.LoadScene(StringConstants.NAME_MAIN_MENU);
     }
-    public override void OnPlayerEnteredRoom(Player newPlayer)
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        if(PhotonNetwork.IsMasterClient){
-            Instantiate(_playerPrefab, Toches_of_spawn[0].position, Quaternion.identity);
-        } else {
-            Instantiate(_playerPrefab, Toches_of_spawn[1].position, Quaternion.identity);
-        }
+        PhotonNetwork.Instantiate(_playerPrefab.name, Toches_of_spawn.position, Quaternion.identity,0);
     }
     private IEnumerator StartOcklock(){
         yield return new WaitForSecondsRealtime(1);
         //минус счет 1 сек
         //событие начинается
-    }
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        
     }
 }

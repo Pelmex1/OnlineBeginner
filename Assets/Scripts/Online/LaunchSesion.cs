@@ -72,13 +72,13 @@ namespace OnlineBeginner.Multiplayer
         {
             Debug.Log("Succefully conected to server!");
         }
-        public override void OnPlayerEnteredRoom(Player newPlayer)
+        public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
         {
             Debug.Log("Player entered on room");
             _isTwoPlayersInRoom = true;
             StartCoroutine(Wait());
         }
-        public override void OnPlayerLeftRoom(Player otherPlayer)
+        public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
         {
             _isTwoPlayersInRoom = false;
         }
