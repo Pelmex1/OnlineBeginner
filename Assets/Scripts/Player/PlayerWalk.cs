@@ -42,9 +42,7 @@ public class PlayerWalk : MonoBehaviourPun
     }
     private void FixedUpdate()
     {
-        if(photonView.IsMine){
-
-            if (PhotonNetwork.IsConnected && IsEnd != true)
+            if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
             {
                 _playerCamera.enabled = true;
                 _speed += PLUS_TO_SPEED;
@@ -56,7 +54,6 @@ public class PlayerWalk : MonoBehaviourPun
                 }
                 _rb.MovePosition(_rb.position + _speed * Time.fixedDeltaTime * -transform.right);
             }
-        } else _playerCamera.enabled = false;
 
     }
     private void ChangePosition(float horizontal)
