@@ -42,17 +42,21 @@ public class PlayerWalk : MonoBehaviourPun
     }
     private void FixedUpdate()
     {
-        if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
-        {
-            _speed += PLUS_TO_SPEED;
-            _horizontal = Input.GetAxisRaw("Horizontal");
-            ChangePosition(_horizontal);
-            if (_localPosition.Value != transform.position.z)
+        if(photonView.IsMine){
+
+            if (PhotonNetwork.IsConnected && IsEnd != true)
             {
-                transform.position = Vector3.Lerp(transform.position, new(transform.position.x, transform.position.y, _localPosition.Value), Time.fixedTime * _speed);
+                _playerCamera.enabled = true;
+                _speed += PLUS_TO_SPEED;
+                _horizontal = Input.GetAxisRaw("Horizontal");
+                ChangePosition(_horizontal);
+                if (_localPosition.Value != transform.position.z)
+                {
+                    transform.position = Vector3.Lerp(transform.position, new(transform.position.x, transform.position.y, _localPosition.Value), Time.fixedTime * _speed);
+                }
+                _rb.MovePosition(_rb.position + _speed * Time.fixedDeltaTime * -transform.right);
             }
-            _rb.MovePosition(_rb.position + _speed * Time.fixedDeltaTime * -transform.right);
-        }
+        } else _playerCamera.enabled = false;
 
     }
     private void ChangePosition(float horizontal)
