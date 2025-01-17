@@ -11,6 +11,7 @@ namespace Game.Level
         [SerializeField] private EndGame _endGame;
         [SerializeField] private PlayerWalk _player;
         [SerializeField] private MapGenerator _spawnController;
+        [SerializeField] private InGameScene _inGameScene;
 
         private EventBus _eventBus;
 
@@ -40,6 +41,7 @@ namespace Game.Level
             _gameMenu.Init();
             _player.Init();
             _spawnController.Init();
+            _inGameScene.Init();
             _endGame.Init();
         }
 

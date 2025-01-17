@@ -70,6 +70,7 @@ namespace OnlineBeginner.Multiplayer
         }
         public override void OnConnectedToMaster()
         {
+            _isConnected = true;
             Debug.Log("Succefully conected to server!");
         }
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
@@ -93,7 +94,7 @@ namespace OnlineBeginner.Multiplayer
                     {
                         PhotonNetwork.LoadLevel("GameScene");
                     } else {
-                        break;
+                        continue;
                     }
             }
 
