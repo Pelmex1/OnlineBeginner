@@ -15,8 +15,10 @@ public class InGameScene : MonoBehaviourPunCallbacks
     private Transform Toches_of_spawn;
     private EventBus _eventBus;
     public void Init(){
+        GetPointsOfSpawn getPointsOfSpawn = new();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
-        _eventBus.Invoke(new GetPointsOfSpawn(ref Toches_of_spawn));
+        _eventBus.Invoke(getPointsOfSpawn);
+        PhotonNetwork.Instantiate(_playerPrefab.name, getPointsOfSpawn.Points.position, Quaternion.identity,0);
     } 
     public void LeaveRoom()
     {
@@ -29,7 +31,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Debug.Log("Player Entered scene");
-        PhotonNetwork.Instantiate(_playerPrefab.name, Toches_of_spawn.position, Quaternion.identity,0);
+        
     }
     private IEnumerator StartOcklock(){
         yield return new WaitForSecondsRealtime(1);

@@ -19,7 +19,7 @@ public class PlayerWalk : MonoBehaviourPun
     private EventBus _eventBus;
     private bool IsEnd = false;
     private CameraWork _cameraWork;
-    public void Init()
+    public void Start()
     {
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
