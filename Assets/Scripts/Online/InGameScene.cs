@@ -12,7 +12,6 @@ public class InGameScene : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject _playerPrefab;
     public static InGameScene instance;
-    private Transform Toches_of_spawn;
     private EventBus _eventBus;
     public void Init(){
         GetPointsOfSpawn getPointsOfSpawn = new();
