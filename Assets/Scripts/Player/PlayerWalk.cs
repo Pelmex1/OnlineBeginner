@@ -19,8 +19,10 @@ public class PlayerWalk : MonoBehaviourPun
     private EventBus _eventBus;
     private bool IsEnd = false;
     private CameraWork _cameraWork;
+    private Camera _playerCamera;
     public void Start()
     {
+        _playerCamera = GetComponentInChildren<Camera>();
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
@@ -28,7 +30,7 @@ public class PlayerWalk : MonoBehaviourPun
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         _localPosition = positions.First; _localPosition = _localPosition.Next;
         if(photonView.IsMine){
-            _cameraWork.OnStartFollowing();
+            _cameraWork.Init(_playerCamera);
         }
     }
     private void FixedUpdate()

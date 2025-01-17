@@ -51,16 +51,17 @@ namespace OnlineBeginner.Online
         #endregion
 
         #region MonoBehaviour Callbacks
-
+        private Camera mainCamera;
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during initialization phase
         /// </summary>
-        void Start()
+        public void Init(Camera camera)
         {
+            mainCamera = camera;
             // Start following the target if wanted.
             if (followOnStart)
             {
-                OnStartFollowing();
+                OnStartFollowing(camera);
             }
         }
 
@@ -71,7 +72,7 @@ namespace OnlineBeginner.Online
             // so we need to cover corner cases where the Main Camera is different everytime we load a new scene, and reconnect when that happens
             if (cameraTransform == null && isFollowing)
             {
-                OnStartFollowing();
+                OnStartFollowing(mainCamera);
             }
 
             // only follow is explicitly declared
@@ -88,7 +89,7 @@ namespace OnlineBeginner.Online
         /// Raises the start following event.
         /// Use this when you don't know at the time of editing what to follow, typically instances managed by the photon network.
         /// </summary>
-        public void OnStartFollowing()
+        public void OnStartFollowing(Camera camera)
         {
             cameraTransform = Camera.main.transform;
             isFollowing = true;
