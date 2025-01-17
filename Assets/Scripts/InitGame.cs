@@ -9,7 +9,6 @@ namespace Game.Level
     {
         [SerializeField] private GameMenu _gameMenu;
         [SerializeField] private EndGame _endGame;
-        [SerializeField] private PlayerWalk _player;
         [SerializeField] private MapGenerator _spawnController;
         [SerializeField] private InGameScene _inGameScene;
 
@@ -39,7 +38,6 @@ namespace Game.Level
         private void Init()
         {
             _gameMenu.Init();
-            _player.Init();
             _spawnController.Init();
             _inGameScene.Init();
             _endGame.Init();
