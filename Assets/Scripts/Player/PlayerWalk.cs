@@ -29,13 +29,20 @@ public class PlayerWalk : MonoBehaviourPun
         _eventBus.Subscribe<bool>(wasFinish => IsEnd = wasFinish);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         _localPosition = positions.First; _localPosition = _localPosition.Next;
-        if(photonView.IsMine){
+        if (photonView.IsMine)
+        {
+            _playerCamera.enabled = true;
             _cameraWork.Init(_playerCamera);
         }
+        else
+        {
+            _playerCamera.enabled = false;
+        }
+
     }
     private void FixedUpdate()
     {
-        if (PhotonNetwork.IsConnected && photonView.IsMine  && IsEnd != true)
+        if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
         {
             _speed += PLUS_TO_SPEED;
             _horizontal = Input.GetAxisRaw("Horizontal");

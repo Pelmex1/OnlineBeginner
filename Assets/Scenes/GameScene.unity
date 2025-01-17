@@ -4144,6 +4144,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EndGame
       objectReference: {fileID: 0}
+    - target: {fileID: 4957312474518000232, guid: 83ec193fbfbd2e64a8df40a2e53a0e7f,
+        type: 3}
+      propertyPath: m_TagString
+      value: Finish
+      objectReference: {fileID: 0}
     - target: {fileID: 6543399354420375980, guid: 83ec193fbfbd2e64a8df40a2e53a0e7f,
         type: 3}
       propertyPath: m_RenderAlignment
