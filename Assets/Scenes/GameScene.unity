@@ -3383,9 +3383,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameMenu: {fileID: 267786236}
   _endGame: {fileID: 647300615}
-  _player: {fileID: 0}
   _spawnController: {fileID: 29719957}
-  _inGameScene: {fileID: 0}
+  _inGameScene: {fileID: 1975004456}
 --- !u!4 &1975004455
 Transform:
   m_ObjectHideFlags: 0
