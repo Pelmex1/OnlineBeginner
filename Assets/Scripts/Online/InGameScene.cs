@@ -17,7 +17,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
         GetPointsOfSpawn getPointsOfSpawn = new();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
-        PhotonNetwork.Instantiate(_playerPrefab.name, getPointsOfSpawn.Points.position, Quaternion.identity,0);
+        PhotonNetwork.Instantiate(_playerPrefab.name, getPointsOfSpawn.Points.position, Quaternion.identity, 0);
     } 
     public void LeaveRoom()
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 namespace OnlineBeginner.EventBus.Signals{
-    public class GetPointsOfSpawn : MonoBehaviour
+    public class GetPointsOfSpawn
     {
         public Transform Points;
     }
