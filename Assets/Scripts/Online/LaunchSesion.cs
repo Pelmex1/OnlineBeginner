@@ -4,10 +4,12 @@ using Photon.Realtime;
 using TMPro;
 using System.Collections;
 using OnlineBeginner.Consts;
+using UnityEngine.UI;
 namespace OnlineBeginner.Multiplayer
 {
     public class Lobby : MonoBehaviourPunCallbacks
     {
+        [SerializeField] Button _onlineButton;
         [SerializeField] GameObject _createRoomPanel;
         [SerializeField] GameObject _loadingScene;
         [SerializeField] TMP_InputField _createRoom;
@@ -24,8 +26,13 @@ namespace OnlineBeginner.Multiplayer
             _isConnected = PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
         }
+        private void Update() {
+            if(_isConnected == true)
+                _onlineButton.interactable = true;
+        }
         public void JoinRandomRoom()
         {
+            _loadingScene.SetActive(true);
             if(!_isCreatedRoom){
                 if(_isConnected){
                     PhotonNetwork.JoinRandomRoom();
@@ -59,6 +66,7 @@ namespace OnlineBeginner.Multiplayer
             };
             PhotonNetwork.CreateRoom(_createRoom.text,roomOptions);
             _isCreatedRoom = true;
+            _createRoomPanel.SetActive(false);
         }
         public override void OnCreatedRoom()
         {

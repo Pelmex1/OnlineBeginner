@@ -2047,6 +2047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cc537fedbc77d44b96179d5de45c022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _onlineButton: {fileID: 1750308770}
   _createRoomPanel: {fileID: 178109492}
   _loadingScene: {fileID: 1094597265}
   _createRoom: {fileID: 304568737}
@@ -2857,6 +2858,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8986778078849804520, guid: dfc791cae673ad54f95dfb5d7dac7c30,
         type: 3}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8986778078849804520, guid: dfc791cae673ad54f95dfb5d7dac7c30,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -3145,6 +3151,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1672719682}
   m_CullTransparentMesh: 1
+--- !u!114 &1750308770 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8986778078849804520, guid: dfc791cae673ad54f95dfb5d7dac7c30,
+    type: 3}
+  m_PrefabInstance: {fileID: 1612848046}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1797307495
 GameObject:
   m_ObjectHideFlags: 0
