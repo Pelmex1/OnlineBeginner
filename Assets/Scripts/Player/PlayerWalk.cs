@@ -20,8 +20,10 @@ public class PlayerWalk : MonoBehaviourPun
     private bool IsEnd = false;
     private CameraWork _cameraWork;
     private Camera _playerCamera;
+    private GameObject _canvas;
     public void Start()
     {
+        _canvas = GetComponentInChildren<Canvas>().gameObject;
         _playerCamera = GetComponentInChildren<Camera>();
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
@@ -32,10 +34,12 @@ public class PlayerWalk : MonoBehaviourPun
         if (photonView.IsMine)
         {
             _playerCamera.enabled = true;
+            _canvas.SetActive(true);
             _cameraWork.Init(_playerCamera);
         }
         else
         {
+            _canvas.SetActive(false);
             _playerCamera.enabled = false;
         }
 
