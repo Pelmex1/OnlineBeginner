@@ -23,7 +23,7 @@ namespace OnlineBeginner.Multiplayer
         }
         private void Start()
         {
-            _isConnected = PhotonNetwork.ConnectUsingSettings();
+            PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
         }
         private void Update() {
