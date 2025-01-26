@@ -6,9 +6,10 @@ using OnlineBeginner.Online;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerWalk : MonoBehaviourPun
+public class PlayerWalk : MonoBehaviourPun,IGetCanvas
 {
     [SerializeField] private float _speed;
+    public GameObject Canvas {get; set;}
     private const float PLUS_TO_SPEED = 0.1F;
     private float _horizontal;
     private Rigidbody _rb;
@@ -24,6 +25,7 @@ public class PlayerWalk : MonoBehaviourPun
     public void Start()
     {
         _canvas = GetComponentInChildren<Canvas>().gameObject;
+        Canvas = _canvas;
         _playerCamera = GetComponentInChildren<Camera>();
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();

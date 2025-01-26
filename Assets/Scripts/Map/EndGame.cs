@@ -23,7 +23,7 @@ public class EndGame : MonoBehaviour
         if (other.tag.Equals("Player"))
         {
             _placeOfPlayer++;
-            _endPanel = other.GetComponentInChildren<Canvas>().gameObject;
+            _endPanel = other.GetComponentInChildren<IGetCanvas>().Canvas;
             eventBus.Invoke(new TimeSignal(true));
             eventBus.Invoke<bool>(true);
             _endPanel.SetActive(true);
