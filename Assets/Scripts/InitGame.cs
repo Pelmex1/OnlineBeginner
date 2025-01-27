@@ -8,9 +8,9 @@ namespace Game.Level
     public class InitGame : MonoBehaviour
     {
         [SerializeField] private GameMenu _gameMenu;
-        [SerializeField] private EndGame _endGame;
         [SerializeField] private MapGenerator _spawnController;
         [SerializeField] private InGameScene _inGameScene;
+        [SerializeField] ParticleSystem[] _fireworks = new ParticleSystem[2];
 
         private EventBus _eventBus;
 
@@ -24,7 +24,16 @@ namespace Game.Level
             Init();
             AddDisposables();
         }
-
+        private void OnEnable() {
+            _eventBus.Subscribe<EndGame>(InitEndGame);
+        }
+        private void OnDisable() {
+            _eventBus.Unsubscribe<EndGame>(InitEndGame);
+        }
+        private void InitEndGame(EndGame endGame)
+        {
+            endGame.Init(_fireworks);
+        }
         private void RegisterServices()
         {
             ServiceLocator.Initialize();
@@ -40,7 +49,6 @@ namespace Game.Level
             _gameMenu.Init();
             _spawnController.Init();
             _inGameScene.Init();
-            _endGame.Init();
         }
 
         private void AddDisposables()

@@ -6,10 +6,10 @@ using OnlineBeginner.Online;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerWalk : MonoBehaviourPun,IGetCanvas
+public class PlayerWalk : MonoBehaviourPun
 {
     [SerializeField] private float _speed;
-    public GameObject Canvas {get; set;}
+    [SerializeField] private EndGame _endGame;
     private const float PLUS_TO_SPEED = 0.1F;
     private float _horizontal;
     private Rigidbody _rb;
@@ -25,12 +25,12 @@ public class PlayerWalk : MonoBehaviourPun,IGetCanvas
     public void Start()
     {
         _canvas = GetComponentInChildren<Canvas>().gameObject;
-        Canvas = _canvas;
         _playerCamera = GetComponentInChildren<Camera>();
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Subscribe<bool>(wasFinish => IsEnd = wasFinish);
+        _eventBus.Invoke<EndGame>(_endGame);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         _localPosition = positions.First; _localPosition = _localPosition.Next;
         if (photonView.IsMine)

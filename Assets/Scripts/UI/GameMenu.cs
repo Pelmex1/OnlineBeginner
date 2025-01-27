@@ -13,7 +13,6 @@ public class GameMenu : MonoBehaviour
     private const string SoundPreference = "isSoundOn";
     private const float VolumeOn = 0f;
     private const float VolumeOff = -80f;
-    [SerializeField] private GameObject exitPanel;
     [SerializeField] private AudioSource[] audioSources;
     [SerializeField] private AudioMixer mainAudioMixer;
     [SerializeField] private Button soundToggleButton;
@@ -76,7 +75,6 @@ public class GameMenu : MonoBehaviour
     public void ToggleSound()
     {
         isSoundActive = !isSoundActive;
-        audioSources[1].Play();
         foreach (var audio in audioSources)
         {
             audio.enabled = isSoundActive;
@@ -86,25 +84,8 @@ public class GameMenu : MonoBehaviour
         PlayerPrefs.Save();
         soundToggleButton.image.sprite = isSoundActive ? soundOnSprite : soundOffSprite;
     }
-    public void OpenSettings()
-    {
-        audioSources[1].Play();
-        exitPanel.SetActive(true);
-    }
-
-    public void CloseSettings()
-    {
-        audioSources[1].Play();
-        exitPanel.SetActive(false);
-    }
     public void ReturnToMainMenu()
     {
-        audioSources[1].Play();
         SceneManager.LoadScene("MainMenu");
-    }
-    public void Again()
-    {
-        audioSources[1].Play();
-        SceneManager.LoadScene("GameScene");
     }
 }

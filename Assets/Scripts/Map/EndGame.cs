@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using CustomEventBus;
 using OnlineBeginner.EventBus.Signals;
 using TMPro;
@@ -8,22 +5,22 @@ using UnityEngine;
 
 public class EndGame : MonoBehaviour
 {
-    
+    [SerializeField]private GameObject _endPanel;
     [SerializeField] TMP_Text _infoText;
-    [SerializeField] ParticleSystem[] _fireworks = new ParticleSystem[2];
+    ParticleSystem[] _fireworks = new ParticleSystem[2];
     private EventBus eventBus;
     private int _placeOfPlayer = 0;
-    private GameObject _endPanel;
-    public void Init()
+    
+    public void Init(ParticleSystem[] fireworks)
     {
         eventBus = ServiceLocator.Current.Get<EventBus>();
+        _fireworks = fireworks;
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals("Player"))
+        if (other.tag.Equals("Finish"))
         {
             _placeOfPlayer++;
-            _endPanel = other.GetComponentInChildren<IGetCanvas>().Canvas;
             eventBus.Invoke(new TimeSignal(true));
             eventBus.Invoke<bool>(true);
             _endPanel.SetActive(true);
