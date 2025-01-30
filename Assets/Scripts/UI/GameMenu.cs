@@ -4,9 +4,9 @@ using OnlineBeginner.EventBus.Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class GameMenu : MonoBehaviour
 {
@@ -32,6 +32,7 @@ public class GameMenu : MonoBehaviour
         Time.timeScale = 1f;
         eventBus = ServiceLocator.Current.Get<EventBus>();
         eventBus.Subscribe<TimeSignal>(SetTime);
+        PlayMusic();
     }
     private void Update()
     {
@@ -41,6 +42,13 @@ public class GameMenu : MonoBehaviour
             _timeText.text = $"{(int)time}";
         }
     }
+    [PunRPC]
+    private void PlayBttSound()
+    {
+        audioSources[0].Play();
+    }
+    [PunRPC]
+    private void PlayMainMusic() => audioSources[1].Play();
     private void SetTime(TimeSignal signal)
     {
         isEnd = signal.wasEnd;
@@ -50,10 +58,6 @@ public class GameMenu : MonoBehaviour
         _bestTimeText.text = $"{PlayerPrefs.GetInt("BestTime", 200)}";
         _yourTimeText.text = $"{Itime}";
         PlayerPrefs.Save();
-    }
-    public void OnMessageReceived(string message)
-    {
-        Console.WriteLine($"Received message: {message}");
     }
 
     private void InitializeAudioSettings()
@@ -74,6 +78,7 @@ public class GameMenu : MonoBehaviour
     }
     public void ToggleSound()
     {
+        PlaySoundForSingleClient();
         isSoundActive = !isSoundActive;
         foreach (var audio in audioSources)
         {
@@ -86,6 +91,17 @@ public class GameMenu : MonoBehaviour
     }
     public void ReturnToMainMenu()
     {
+        PlaySoundForSingleClient();
         SceneManager.LoadScene("MainMenu");
+    }
+    private void PlaySoundForSingleClient()
+    {
+        int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("PlayBttSound",PhotonNetwork.CurrentRoom.GetPlayer(playerId));
+    }
+    private void PlayMusic(){
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("PlayMainMusic",RpcTarget.All);
     }
 }

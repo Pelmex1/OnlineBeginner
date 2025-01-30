@@ -29,7 +29,7 @@ public class PlayerWalk : MonoBehaviourPun
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
-        _eventBus.Subscribe<bool>(wasFinish => IsEnd = wasFinish);
+        _eventBus.Subscribe<bool>(OnEnding);
         _eventBus.Invoke<EndGame>(_endGame);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         _localPosition = positions.First; _localPosition = _localPosition.Next;
@@ -48,19 +48,30 @@ public class PlayerWalk : MonoBehaviourPun
     }
     private void FixedUpdate()
     {
-            if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
+        if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
+        {
+            _playerCamera.enabled = true;
+            _speed += PLUS_TO_SPEED;
+            _horizontal = Input.GetAxisRaw("Horizontal");
+            ChangePosition(_horizontal);
+            if (_localPosition.Value != transform.position.z)
             {
-                _playerCamera.enabled = true;
-                _speed += PLUS_TO_SPEED;
-                _horizontal = Input.GetAxisRaw("Horizontal");
-                ChangePosition(_horizontal);
-                if (_localPosition.Value != transform.position.z)
-                {
-                    transform.position = Vector3.Lerp(transform.position, new(transform.position.x, transform.position.y, _localPosition.Value), Time.fixedTime * _speed);
-                }
-                _rb.MovePosition(_rb.position + _speed * Time.fixedDeltaTime * -transform.right);
+                transform.position = Vector3.Lerp(transform.position, new(transform.position.x, transform.position.y, _localPosition.Value), Time.fixedTime * _speed);
             }
+            _rb.MovePosition(_rb.position + _speed * Time.fixedDeltaTime * -transform.right);
+        }
 
+    }
+    [PunRPC]
+    private void IsEndForRunning(bool wasFinish)
+    {
+        IsEnd = wasFinish;
+    }
+    private void OnEnding(bool wasFinish)
+    {
+        int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("IsEndForRunning", PhotonNetwork.CurrentRoom.GetPlayer(playerId),wasFinish);
     }
     private void ChangePosition(float horizontal)
     {
