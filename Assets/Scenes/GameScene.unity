@@ -144,7 +144,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 267786236}
+      objectReference: {fileID: 0}
     - target: {fileID: 8986778078849804520, guid: 5754ef6133508f94eb5f9008157be8e3,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -489,58 +489,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58c41768400183d4fb5c78d6aab59f0f, type: 3}
---- !u!1 &267786235
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 267786237}
-  - component: {fileID: 267786236}
-  m_Layer: 0
-  m_Name: UI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &267786236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 267786235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 751a1ec169af83547aa00ab6c93bf43f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSources: []
-  mainAudioMixer: {fileID: 24100000, guid: 6821182521fd0c84c8f5a1dfd844377f, type: 2}
-  soundToggleButton: {fileID: 1618445133}
-  soundOnSprite: {fileID: 21300000, guid: cd72311f1180af14db04c6aba447b34c, type: 3}
-  soundOffSprite: {fileID: 21300000, guid: 07b32c538f796844bbcd68c43da30dcf, type: 3}
-  _timeText: {fileID: 426392653}
-  _bestTimeText: {fileID: 764000984}
-  _yourTimeText: {fileID: 642268425}
---- !u!4 &267786237
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 267786235}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 683.54565, y: 2094.1924, z: 11603.876}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &305828348
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,7 +901,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 267786236}
+      objectReference: {fileID: 0}
     - target: {fileID: 8986778078849804520, guid: 6d6e6e690a5820a4a97763552486b8e5,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -3099,18 +3047,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1618445131}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1618445133 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8986778078849804520, guid: 6224e969c01b3524386fe2011ba9ecd9,
-    type: 3}
-  m_PrefabInstance: {fileID: 1618445131}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1627004276 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 58c41768400183d4fb5c78d6aab59f0f,
@@ -3484,7 +3420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e206ec8effb23d4dbafc44aaa8e39a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameMenu: {fileID: 267786236}
+  _gameMenu: {fileID: 0}
   _spawnController: {fileID: 432578788}
   _inGameScene: {fileID: 1975004456}
   _fireworks:
@@ -3809,7 +3745,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 267786236}
+      objectReference: {fileID: 0}
     - target: {fileID: 8986778078849804520, guid: dfc791cae673ad54f95dfb5d7dac7c30,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -4286,7 +4222,6 @@ SceneRoots:
   - {fileID: 988187115}
   - {fileID: 29719961}
   - {fileID: 1192577182}
-  - {fileID: 267786237}
   - {fileID: 1736274438}
   - {fileID: 1134836234}
   - {fileID: 1790445154}
