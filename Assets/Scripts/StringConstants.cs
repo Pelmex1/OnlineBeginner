@@ -4,5 +4,6 @@ namespace OnlineBeginner.Consts
     {
         public const string GAME_VERSION = "1.0.0";
         public const string NAME_MAIN_MENU = "MainMenu";
+        public const string NAME_OBSTACLE = "Obstacle";
     }
 }
