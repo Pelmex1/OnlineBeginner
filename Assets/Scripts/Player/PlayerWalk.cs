@@ -101,4 +101,12 @@ public class PlayerWalk : MonoBehaviourPun
         yield return new WaitForSecondsRealtime(Time.fixedDeltaTime * 10);
         _cooldown = false;
     }
+    private void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Obstacle"))
+        {
+            _speed /= 2;
+        }
+    }
+    
+
 }
