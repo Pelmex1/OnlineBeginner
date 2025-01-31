@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class GameMenu : MonoBehaviour
+public class GameMenu : MonoBehaviour,ITimeEnd
 {
     private const string SoundPreference = "isSoundOn";
     private const float VolumeOn = 0f;
@@ -30,8 +30,6 @@ public class GameMenu : MonoBehaviour
     {
         InitializeAudioSettings();
         Time.timeScale = 1f;
-        eventBus = ServiceLocator.Current.Get<EventBus>();
-        eventBus.Subscribe<TimeSignal>(SetTime);
         PlayMusic();
     }
     private void Update()
@@ -49,9 +47,9 @@ public class GameMenu : MonoBehaviour
     }
     [PunRPC]
     private void PlayMainMusic() => audioSources[1].Play();
-    private void SetTime(TimeSignal signal)
+    public void SetTime()
     {
-        isEnd = signal.wasEnd;
+        isEnd = false;
         int Itime = (int)time;
         if (time <= PlayerPrefs.GetInt("BestTime", 200))
             PlayerPrefs.SetInt("BestTime", Itime);

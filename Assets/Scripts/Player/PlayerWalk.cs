@@ -11,6 +11,7 @@ public class PlayerWalk : MonoBehaviourPun
     [SerializeField] private float _speed;
     [SerializeField] private EndGame _endGame;
     private const float PLUS_TO_SPEED = 0.1F;
+    ParticleSystem[] _fireworks = new ParticleSystem[2];
     private float _horizontal;
     private Rigidbody _rb;
     private LinkedList<float> positions;
@@ -22,15 +23,21 @@ public class PlayerWalk : MonoBehaviourPun
     private CameraWork _cameraWork;
     private Camera _playerCamera;
     private GameObject _canvas;
+    IEndGame endGame;
+    ITimeEnd timeEnd;
     public void Start()
     {
         _canvas = GetComponentInChildren<Canvas>().gameObject;
         _playerCamera = GetComponentInChildren<Camera>();
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
+        endGame = GetComponent<IEndGame>();
+        timeEnd = GetComponent<ITimeEnd>();
+        
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Subscribe<bool>(OnEnding);
-        _eventBus.Invoke<EndGame>(_endGame);
+        _eventBus.Invoke<IEndGame>(endGame);
+
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         _localPosition = positions.First; _localPosition = _localPosition.Next;
         if (photonView.IsMine)
@@ -62,16 +69,11 @@ public class PlayerWalk : MonoBehaviourPun
         }
 
     }
-    [PunRPC]
-    private void IsEndForRunning(bool wasFinish)
-    {
-        IsEnd = wasFinish;
-    }
     private void OnEnding(bool wasFinish)
     {
         int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
         PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("IsEndForRunning", PhotonNetwork.CurrentRoom.GetPlayer(playerId),wasFinish);
+        photonView.RPC("IsEndForRunning", PhotonNetwork.CurrentRoom.GetPlayer(playerId), wasFinish);
     }
     private void ChangePosition(float horizontal)
     {
@@ -101,12 +103,19 @@ public class PlayerWalk : MonoBehaviourPun
         yield return new WaitForSecondsRealtime(Time.fixedDeltaTime * 10);
         _cooldown = false;
     }
-    private void OnTriggerEnter(Collider other) {
+    private void OnTriggerEnter(Collider other)
+    {
         if (other.CompareTag("Obstacle"))
         {
             _speed /= 2;
         }
+        if (other.tag.Equals("Finish"))
+        {
+            endGame.OpenUI();
+            timeEnd.SetTime();
+            IsEnd = false;
+        }
     }
-    
+
 
 }

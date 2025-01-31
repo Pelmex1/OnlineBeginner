@@ -24,12 +24,12 @@ namespace Game.Level
             AddDisposables();
         }
         private void OnEnable() {
-            _eventBus.Subscribe<EndGame>(InitEndGame);
+            _eventBus.Subscribe<IEndGame>(InitEndGame);
         }
         private void OnDisable() {
-            _eventBus.Unsubscribe<EndGame>(InitEndGame);
+            _eventBus.Unsubscribe<IEndGame>(InitEndGame);
         }
-        private void InitEndGame(EndGame endGame)
+        private void InitEndGame(IEndGame endGame)
         {
             endGame.Init(_fireworks);
         }

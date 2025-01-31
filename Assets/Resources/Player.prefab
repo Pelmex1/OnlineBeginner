@@ -2183,7 +2183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 1
-  _endGame: {fileID: 0}
+  _endGame: {fileID: 6585989944032237653}
 --- !u!54 &4515348445377690623
 Rigidbody:
   m_ObjectHideFlags: 0
