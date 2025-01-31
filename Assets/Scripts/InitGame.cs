@@ -7,7 +7,6 @@ namespace Game.Level
 {
     public class InitGame : MonoBehaviour
     {
-        [SerializeField] private GameMenu _gameMenu;
         [SerializeField] private MapGenerator _spawnController;
         [SerializeField] private InGameScene _inGameScene;
         [SerializeField] ParticleSystem[] _fireworks = new ParticleSystem[2];
@@ -46,7 +45,6 @@ namespace Game.Level
 
         private void Init()
         {
-            _gameMenu.Init();
             _spawnController.Init();
             _inGameScene.Init();
         }

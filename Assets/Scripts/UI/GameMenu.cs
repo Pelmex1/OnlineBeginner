@@ -26,7 +26,7 @@ public class GameMenu : MonoBehaviour
     private bool isEnd = false;
     private float time = 0;
     private EventBus eventBus;
-    public void Init()
+    public void Awake()
     {
         InitializeAudioSettings();
         Time.timeScale = 1f;
