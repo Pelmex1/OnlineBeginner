@@ -20,7 +20,9 @@ public class PlayMainMusic : MonoBehaviourPun
         }
         else
         {
-            Debug.LogError("PhotonView is not attached to the GameObject.");
+            photonView = gameObject.AddComponent<PhotonView>();
+            PlayMusic();
+            Debug.LogWarning("PhotonView is not attached to the GameObject.");
         }
     }
 }
