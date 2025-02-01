@@ -26,7 +26,6 @@ public class GameMenu : MonoBehaviour, ITimeEnd
     {
         InitializeAudioSettings();
         Time.timeScale = 1f;
-        PlayMusic();
     }
     private void Update()
     {
@@ -41,8 +40,6 @@ public class GameMenu : MonoBehaviour, ITimeEnd
     {
         audioSources.Play();
     }
-    [PunRPC]
-    private void PlayMainMusic() => audioSources.Play();
     public void SetTime()
     {
         isEnd = true;
@@ -87,10 +84,5 @@ public class GameMenu : MonoBehaviour, ITimeEnd
         int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
         PhotonView photonView = PhotonView.Get(this);
         photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
-    }
-    private void PlayMusic()
-    {
-        PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("MainMusic", RpcTarget.All);
     }
 }
