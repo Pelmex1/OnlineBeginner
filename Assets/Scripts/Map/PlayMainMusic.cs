@@ -16,6 +16,13 @@ public class PlayMainMusic : MonoBehaviour
     private void PlayMusic()
     {
         PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("MainMusic", RpcTarget.All);
+        if (photonView != null)
+        {
+            photonView.RPC("MainMusic", RpcTarget.All);
+        }
+        else
+        {
+            Debug.LogError("PhotonView is not attached to the GameObject.");
+        }
     }
 }
