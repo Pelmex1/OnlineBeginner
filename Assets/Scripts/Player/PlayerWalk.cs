@@ -113,7 +113,7 @@ public class PlayerWalk : MonoBehaviourPun
         {
             endGame.OpenUI();
             timeEnd.SetTime();
-            IsEnd = false;
+            IsEnd = true;
         }
     }
 
