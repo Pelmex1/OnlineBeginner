@@ -1,8 +1,5 @@
-using CustomEventBus;
-using OnlineBeginner.EventBus.Signals;
 using Photon.Pun;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
 public class EndGame : MonoBehaviour, IEndGame
@@ -20,10 +17,12 @@ public class EndGame : MonoBehaviour, IEndGame
     {
         _placeOfPlayer++;
         if(PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("PlacePlayer",out object place))
-            _placeOfPlayer = (int)place;
-        
+        {
+            if((int)place == 1)
+                _placeOfPlayer++;
+        }
+
         PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable {{"PlacePlayer",_placeOfPlayer}});
-        PlayerPrefs.SetInt("PlacePlayer",_placeOfPlayer);
         _endPanel.SetActive(true);
         _fireworks[0].Play();
         _fireworks[1].Play();

@@ -1,6 +1,3 @@
-using System;
-using CustomEventBus;
-using OnlineBeginner.EventBus.Signals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -8,12 +5,11 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class GameMenu : MonoBehaviour,ITimeEnd
+public class GameMenu : MonoBehaviour, ITimeEnd
 {
-    private const string SoundPreference = "isSoundOn";
     private const float VolumeOn = 0f;
     private const float VolumeOff = -80f;
-    [SerializeField] private AudioSource[] audioSources;
+    [SerializeField] private AudioSource audioSources;
     [SerializeField] private AudioMixer mainAudioMixer;
     [SerializeField] private Button soundToggleButton;
     [SerializeField] private Sprite soundOnSprite;
@@ -25,7 +21,7 @@ public class GameMenu : MonoBehaviour,ITimeEnd
     private bool isSoundActive = false;
     private bool isEnd = false;
     private float time = 0;
-    private EventBus eventBus;
+
     public void Awake()
     {
         InitializeAudioSettings();
@@ -34,7 +30,7 @@ public class GameMenu : MonoBehaviour,ITimeEnd
     }
     private void Update()
     {
-        if (isEnd == false)
+        if (isEnd!)
         {
             time += Time.deltaTime;
             _timeText.text = $"{(int)time}";
@@ -43,13 +39,13 @@ public class GameMenu : MonoBehaviour,ITimeEnd
     [PunRPC]
     private void PlayBttSound()
     {
-        audioSources[0].Play();
+        audioSources.Play();
     }
     [PunRPC]
-    private void PlayMainMusic() => audioSources[1].Play();
+    private void PlayMainMusic() => audioSources.Play();
     public void SetTime()
     {
-        isEnd = false;
+        isEnd = true;
         int Itime = (int)time;
         if (time <= PlayerPrefs.GetInt("BestTime", 200))
             PlayerPrefs.SetInt("BestTime", Itime);
@@ -60,14 +56,11 @@ public class GameMenu : MonoBehaviour,ITimeEnd
 
     private void InitializeAudioSettings()
     {
-        int soundStatus = PlayerPrefs.GetInt(SoundPreference, 1);
+        int soundStatus = PlayerPrefs.GetInt("isSoundOn", 1);
         if (soundStatus == 1)
         {
             mainAudioMixer.SetFloat("MasterVolume", VolumeOn);
-            for (int i = 0; i < audioSources.Length; i++)
-            {
-                audioSources[i].Play();
-            }
+            audioSources.Play();
         }
         else
         {
@@ -78,12 +71,9 @@ public class GameMenu : MonoBehaviour,ITimeEnd
     {
         PlaySoundForSingleClient();
         isSoundActive = !isSoundActive;
-        foreach (var audio in audioSources)
-        {
-            audio.enabled = isSoundActive;
-        }
+        audioSources.enabled = isSoundActive;
         mainAudioMixer.SetFloat("MasterVolume", isSoundActive ? VolumeOn : VolumeOff);
-        PlayerPrefs.SetInt(SoundPreference, isSoundActive ? 1 : 0);
+        PlayerPrefs.SetInt("isSoundOn", isSoundActive ? 1 : 0);
         PlayerPrefs.Save();
         soundToggleButton.image.sprite = isSoundActive ? soundOnSprite : soundOffSprite;
     }
@@ -96,10 +86,11 @@ public class GameMenu : MonoBehaviour,ITimeEnd
     {
         int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
         PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("PlayBttSound",PhotonNetwork.CurrentRoom.GetPlayer(playerId));
+        photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
     }
-    private void PlayMusic(){
+    private void PlayMusic()
+    {
         PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("PlayMainMusic",RpcTarget.All);
+        photonView.RPC("MainMusic", RpcTarget.All);
     }
 }
