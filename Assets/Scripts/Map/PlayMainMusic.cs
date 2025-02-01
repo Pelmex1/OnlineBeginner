@@ -7,7 +7,7 @@ public class PlayMainMusic : MonoBehaviour
 {
     [SerializeField] private AudioSource audioSources;
 
-    private void Awake()
+    private void Start()
     {
         PlayMusic();
     }
