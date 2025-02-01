@@ -35,7 +35,6 @@ public class PlayerWalk : MonoBehaviourPun
         timeEnd = GetComponent<ITimeEnd>();
         
         _eventBus = ServiceLocator.Current.Get<EventBus>();
-        _eventBus.Subscribe<bool>(OnEnding);
         _eventBus.Invoke<IEndGame>(endGame);
 
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
@@ -68,12 +67,6 @@ public class PlayerWalk : MonoBehaviourPun
             _rb.MovePosition(_rb.position + _speed * Time.fixedDeltaTime * -transform.right);
         }
 
-    }
-    private void OnEnding(bool wasFinish)
-    {
-        int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
-        PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("IsEndForRunning", PhotonNetwork.CurrentRoom.GetPlayer(playerId), wasFinish);
     }
     private void ChangePosition(float horizontal)
     {

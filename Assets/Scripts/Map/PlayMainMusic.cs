@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayMainMusic : MonoBehaviour
+public class PlayMainMusic : MonoBehaviourPun
 {
-    [SerializeField] private AudioSource audioSources;
+    [SerializeField] private AudioSource audioSource;
 
     private void Start()
     {
         PlayMusic();
     }
     [PunRPC]
-    public void MainMusic() => audioSources.Play();
+    public void MainMusic() => audioSource.Play();
     private void PlayMusic()
     {
         PhotonView photonView = PhotonView.Get(this);
