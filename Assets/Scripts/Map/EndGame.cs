@@ -36,6 +36,5 @@ public class EndGame : MonoBehaviour, IEndGame
                 _infoText.text = "You lost";
                 break;
         }
-        PlayerPrefs.Save();
     }
 }
