@@ -29,7 +29,7 @@ public class GameMenu : MonoBehaviour, ITimeEnd
     }
     private void Update()
     {
-        if (isEnd)
+        if (isEnd == false)
         {
             time += Time.deltaTime;
             _timeText.text = $"{(int)time}";

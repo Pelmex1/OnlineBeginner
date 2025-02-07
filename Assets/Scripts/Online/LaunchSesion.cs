@@ -9,6 +9,7 @@ namespace OnlineBeginner.Multiplayer
 {
     public class Lobby : MonoBehaviourPunCallbacks
     {
+        [SerializeField] TMP_Text _startText;
         [SerializeField] Button _onlineButton;
         [SerializeField] GameObject _createRoomPanel;
         [SerializeField] GameObject _loadingScene;
@@ -17,9 +18,12 @@ namespace OnlineBeginner.Multiplayer
         private bool _isTwoPlayersInRoom;
         private bool _isCreatedRoom = false;
         private bool _isConnected;
+        private GameObject _startTextObjext;
+
         private void Awake()
         {
             PhotonNetwork.AutomaticallySyncScene = true;
+            _startTextObjext = _startText.gameObject;
         }
         private void Start()
         {
@@ -94,9 +98,10 @@ namespace OnlineBeginner.Multiplayer
         private IEnumerator Wait()
         {
             _loadingScene.SetActive(true);
+            _startTextObjext.SetActive(true);
             for(int i = 5; i > 0; i--){
                 if(_isTwoPlayersInRoom){
-                    Debug.Log("Старт через: " + i);
+                    _startText.text = $"{i}";
                     yield return new WaitForSecondsRealtime(1);
                     if(_isTwoPlayersInRoom && i == 1)
                     {
