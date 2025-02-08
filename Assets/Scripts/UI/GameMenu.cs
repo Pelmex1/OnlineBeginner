@@ -82,8 +82,10 @@ public class GameMenu : MonoBehaviour, ITimeEnd
     }
     private void PlaySoundForSingleClient()
     {
-        int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
-        PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
+        audioSources.Play();
+
+        // int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
+        // PhotonView photonView = PhotonView.Get(this);
+        // photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
     }
 }
