@@ -7,7 +7,7 @@ using Photon.Pun;
 
 public class GameMenu : MonoBehaviour, ITimeEnd
 {
-    private const float VolumeOn = 0f;
+    private const float VolumeOn = -20f;
     private const float VolumeOff = -80f;
     [SerializeField] private AudioSource audioSources;
     [SerializeField] private AudioMixer mainAudioMixer;

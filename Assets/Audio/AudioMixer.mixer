@@ -11,13 +11,14 @@ AudioMixerController:
   m_MasterGroup: {fileID: 24300002}
   m_Snapshots:
   - {fileID: 24500006}
+  - {fileID: 1401299578866417086}
   m_StartSnapshot: {fileID: 24500006}
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
-  - guid: ccf7e1554912173438f05e9cb0ac22b8
-    name: MasterVolume
+  - guid: 922efb60e7b29c442bfcff43da6f1be8
+    name: MainVolume
   m_AudioMixerGroupViews:
   - guids:
     - 40f68ef064b043a4e92094e17eb8b2b4
@@ -67,6 +68,19 @@ AudioMixerSnapshotController:
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 5db6c9d1c9113f8429375624e4821513
   m_FloatValues:
-    922efb60e7b29c442bfcff43da6f1be8: 0
+    922efb60e7b29c442bfcff43da6f1be8: -20
+    ccf7e1554912173438f05e9cb0ac22b8: 1
+  m_TransitionOverrides: {}
+--- !u!245 &1401299578866417086
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Snapshot - Copy
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: 6d2fd2a824c7f9f40982053646961123
+  m_FloatValues:
+    922efb60e7b29c442bfcff43da6f1be8: -19.600004
     ccf7e1554912173438f05e9cb0ac22b8: 1
   m_TransitionOverrides: {}

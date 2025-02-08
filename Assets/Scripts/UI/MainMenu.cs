@@ -17,40 +17,39 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Sprite soundOffSprite;
     [SerializeField] private AudioMixer masterAudioMixer;
     private bool isSoundActive;
+
     private void Start()
     {
+        //PlayerPrefs.DeleteAll();
         int bestTime = PlayerPrefs.GetInt("BestTime", 200);
-        if(bestTime != 200)
-        {
-            bestTimeText.text = $"{bestTime}";
-        }
-        else
-        {
-            bestTimeText.text = $"{0}";
-        }
+        bestTimeText.text = bestTime != 200 ? $"{bestTime}" : $"{0}";
         Time.timeScale = 1f;
         InitializeAudioSettings();
     }
+
     private void InitializeAudioSettings()
     {
         isSoundActive = PlayerPrefs.GetInt("isSoundOn", 0) == 1;
-        audioClips[1].Play();
-        foreach (var audio in audioClips)
-        {
-            audio.enabled = isSoundActive;
-        }
         soundToggleButton.image.sprite = isSoundActive ? soundOnSprite : soundOffSprite;
+        SetMasterVolume(isSoundActive ? -20f : -80f);
+    }
+
+    private void SetMasterVolume(float volume)
+    {
+        masterAudioMixer.SetFloat("MainVolume", volume);
     }
 
     public void Play()
     {
         SceneManager.LoadScene("GameScene");
     }
+
     public void OpenSettings()
     {
         audioClips[1].Play();
         settingsPanel.SetActive(true);
     }
+
     public void CloseSettings()
     {
         audioClips[1].Play();
@@ -60,20 +59,21 @@ public class MainMenu : MonoBehaviour
     public void ToggleSound()
     {
         isSoundActive = !isSoundActive;
-        audioClips[1].Play();
-        foreach (var audio in audioClips)
-        {
-            audio.enabled = isSoundActive;
-        }
-        audioClips[0].Play();
-        masterAudioMixer.SetFloat("MasterVolume", isSoundActive ? 0f : -80f);
+        soundToggleButton.image.sprite = isSoundActive ? soundOnSprite : soundOffSprite;
+
+        SetMasterVolume(isSoundActive ? -20f : -80f);
+
         PlayerPrefs.SetInt("isSoundOn", isSoundActive ? 1 : 0);
         PlayerPrefs.Save();
-        soundToggleButton.image.sprite = isSoundActive ? soundOnSprite : soundOffSprite;
+        audioClips[0].Play();
     }
+
     public void ExitGame()
     {
-        audioClips[1].Play();
+        if (audioClips.Length > 1)
+        {
+            audioClips[1].Play();
+        }
 #if UNITY_EDITOR
         EditorApplication.isPlaying = false;
 #else
