@@ -38,7 +38,7 @@ public class GameMenu : MonoBehaviour, ITimeEnd
     [PunRPC]
     private void PlayBttSound()
     {
-        audioSources.Play();
+        //audioSources.Play();
     }
     public void SetTime()
     {
@@ -68,7 +68,6 @@ public class GameMenu : MonoBehaviour, ITimeEnd
     {
         PlaySoundForSingleClient();
         isSoundActive = !isSoundActive;
-        audioSources.enabled = isSoundActive;
         mainAudioMixer.SetFloat("MainVolume", isSoundActive ? VolumeOn : VolumeOff);
         PlayerPrefs.SetInt("isSoundOn", isSoundActive ? 1 : 0);
         PlayerPrefs.Save();
