@@ -22,11 +22,11 @@ public class MainMenu : MonoBehaviour
         int bestTime = PlayerPrefs.GetInt("BestTime", 200);
         if(bestTime != 200)
         {
-            bestTimeText.text = $"Best Time: {bestTime}";
+            bestTimeText.text = $"{bestTime}";
         }
         else
         {
-            bestTimeText.text = $"Best Time: {0}";
+            bestTimeText.text = $"{0}";
         }
         Time.timeScale = 1f;
         InitializeAudioSettings();
