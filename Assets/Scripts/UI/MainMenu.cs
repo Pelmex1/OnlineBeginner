@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -8,6 +9,7 @@ public class MainMenu : MonoBehaviour
 {
     [Header("UI Elements")]
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private TMP_Text bestTimeText;
     [Header("Audio Settings")]
     [SerializeField] private AudioSource[] audioClips;
     [SerializeField] private Button soundToggleButton;
@@ -17,6 +19,15 @@ public class MainMenu : MonoBehaviour
     private bool isSoundActive;
     private void Start()
     {
+        int bestTime = PlayerPrefs.GetInt("BestTime", 200);
+        if(bestTime != 200)
+        {
+            bestTimeText.text = $"Best Time: {bestTime}";
+        }
+        else
+        {
+            bestTimeText.text = $"Best Time: {0}";
+        }
         Time.timeScale = 1f;
         InitializeAudioSettings();
     }
