@@ -56,12 +56,12 @@ public class GameMenu : MonoBehaviour, ITimeEnd
         int soundStatus = PlayerPrefs.GetInt("isSoundOn", 1);
         if (soundStatus == 1)
         {
-            mainAudioMixer.SetFloat("MasterVolume", VolumeOn);
+            mainAudioMixer.SetFloat("MainVolume", VolumeOn);
             audioSources.Play();
         }
         else
         {
-            mainAudioMixer.SetFloat("MasterVolume", VolumeOff);
+            mainAudioMixer.SetFloat("MainVolume", VolumeOff);
         }
     }
     public void ToggleSound()
@@ -69,7 +69,7 @@ public class GameMenu : MonoBehaviour, ITimeEnd
         PlaySoundForSingleClient();
         isSoundActive = !isSoundActive;
         audioSources.enabled = isSoundActive;
-        mainAudioMixer.SetFloat("MasterVolume", isSoundActive ? VolumeOn : VolumeOff);
+        mainAudioMixer.SetFloat("MainVolume", isSoundActive ? VolumeOn : VolumeOff);
         PlayerPrefs.SetInt("isSoundOn", isSoundActive ? 1 : 0);
         PlayerPrefs.Save();
         soundToggleButton.image.sprite = isSoundActive ? soundOnSprite : soundOffSprite;
