@@ -77,6 +77,7 @@ public class GameMenu : MonoBehaviour, ITimeEnd
     public void ReturnToMainMenu()
     {
         PlaySoundForSingleClient();
+        PhotonNetwork.Disconnect();
         PhotonNetwork.LoadLevel("MainMenu");
     }
     private void PlaySoundForSingleClient()
