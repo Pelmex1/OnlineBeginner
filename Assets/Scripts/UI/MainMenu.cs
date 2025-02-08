@@ -65,6 +65,7 @@ public class MainMenu : MonoBehaviour
         {
             audio.enabled = isSoundActive;
         }
+        audioClips[0].Play();
         masterAudioMixer.SetFloat("MasterVolume", isSoundActive ? 0f : -80f);
         PlayerPrefs.SetInt("isSoundOn", isSoundActive ? 1 : 0);
         PlayerPrefs.Save();
