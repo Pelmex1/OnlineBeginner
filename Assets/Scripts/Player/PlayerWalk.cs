@@ -11,7 +11,6 @@ public class PlayerWalk : MonoBehaviourPun
     [SerializeField] private float _speed;
     [SerializeField] private EndGame _endGame;
     private const float PLUS_TO_SPEED = 0.1F;
-    ParticleSystem[] _fireworks = new ParticleSystem[2];
     private float _horizontal;
     private Rigidbody _rb;
     private LinkedList<float> positions;
