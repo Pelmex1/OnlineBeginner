@@ -2022,8 +2022,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c461385ea724dc4192322184a9bab16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1
-  _endGame: {fileID: 6585989944032237653}
 --- !u!54 &4515348445377690623
 Rigidbody:
   m_ObjectHideFlags: 0
