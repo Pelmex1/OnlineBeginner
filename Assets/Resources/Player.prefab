@@ -1983,6 +1983,7 @@ GameObject:
   - component: {fileID: 200659295760478028}
   - component: {fileID: 6585989944032237653}
   - component: {fileID: 3472175272062542735}
+  - component: {fileID: 1561638014351581205}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2177,6 +2178,14 @@ MonoBehaviour:
   _timeText: {fileID: 4469625693625308214}
   _bestTimeText: {fileID: 8236757637716392720}
   _yourTimeText: {fileID: 4323941748040422248}
+--- !u!81 &1561638014351581205
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7239616797551676557}
+  m_Enabled: 1
 --- !u!1 &7299546467727427366
 GameObject:
   m_ObjectHideFlags: 0
