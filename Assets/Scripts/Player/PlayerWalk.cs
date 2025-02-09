@@ -6,10 +6,9 @@ using OnlineBeginner.Online;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerWalk : MonoBehaviourPun
+public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
 {
-    [SerializeField] private float _speed;
-    [SerializeField] private EndGame _endGame;
+    public float Speed { get; set; }
     private const float PLUS_TO_SPEED = 0.1F;
     private float _horizontal;
     private Rigidbody _rb;
@@ -22,19 +21,19 @@ public class PlayerWalk : MonoBehaviourPun
     private CameraWork _cameraWork;
     private Camera _playerCamera;
     private GameObject _canvas;
-    IEndGame endGame;
-    ITimeEnd timeEnd;
+    private IEndGame _endGame;
+    private ITimeEnd _timeEnd;
     public void Start()
     {
         _canvas = GetComponentInChildren<Canvas>().gameObject;
         _playerCamera = GetComponentInChildren<Camera>();
         _cameraWork = GetComponent<CameraWork>();
         _rb = GetComponent<Rigidbody>();
-        endGame = GetComponent<IEndGame>();
-        timeEnd = GetComponent<ITimeEnd>();
+        _endGame = GetComponent<IEndGame>();
+        _timeEnd = GetComponent<ITimeEnd>();
         
         _eventBus = ServiceLocator.Current.Get<EventBus>();
-        _eventBus.Invoke<IEndGame>(endGame);
+        _eventBus.Invoke<IEndGame>(_endGame);
 
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         _localPosition = positions.First; _localPosition = _localPosition.Next;
@@ -56,14 +55,14 @@ public class PlayerWalk : MonoBehaviourPun
         if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
         {
             _playerCamera.enabled = true;
-            _speed += PLUS_TO_SPEED;
+            Speed += PLUS_TO_SPEED;
             _horizontal = Input.GetAxisRaw("Horizontal");
             ChangePosition(_horizontal);
             if (_localPosition.Value != transform.position.z)
             {
-                transform.position = Vector3.Lerp(transform.position, new(transform.position.x, transform.position.y, _localPosition.Value), Time.fixedTime * _speed);
+                transform.position = Vector3.Lerp(transform.position, new(transform.position.x, transform.position.y, _localPosition.Value), Time.fixedTime * Speed);
             }
-            _rb.MovePosition(_rb.position + _speed * Time.fixedDeltaTime * -transform.right);
+            _rb.MovePosition(_rb.position + Speed * Time.fixedDeltaTime * -transform.right);
         }
 
     }
@@ -99,12 +98,12 @@ public class PlayerWalk : MonoBehaviourPun
     {
         if (other.CompareTag("Obstacle"))
         {
-            _speed /= 2;
+            Speed /= 2;
         }
         if (other.tag.Equals("Finish"))
         {
-            endGame.OpenUI();
-            timeEnd.SetTime();
+            _endGame.OpenUI();
+            _timeEnd.SetTime();
             IsEnd = true;
         }
     }

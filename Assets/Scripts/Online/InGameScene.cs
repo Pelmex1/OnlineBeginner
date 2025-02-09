@@ -13,11 +13,14 @@ public class InGameScene : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject _playerPrefab;
     public static InGameScene instance;
     private EventBus _eventBus;
+    private List<IPlayerWalk> _playerWalk;
     public void Init(){
+        _playerWalk = new List<IPlayerWalk>();
         GetPointsOfSpawn getPointsOfSpawn = new();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
-        PhotonNetwork.Instantiate(_playerPrefab.name, getPointsOfSpawn.Points.position, Quaternion.identity, 0);
+        _playerWalk.Add(PhotonNetwork.Instantiate(_playerPrefab.name, getPointsOfSpawn.Points.position, Quaternion.identity, 0).GetComponent<IPlayerWalk>());
+        Debug.Log("Player Created");
     } 
     public void LeaveRoom()
     {
@@ -33,8 +36,14 @@ public class InGameScene : MonoBehaviourPunCallbacks
         
     }
     private IEnumerator StartOcklock(){
-        yield return new WaitForSecondsRealtime(1);
-        //минус счет 1 сек
-        //событие начинается
+        int time = 3;
+        while(time > 0){
+            yield return new WaitForSecondsRealtime(1);
+            time--;
+        }
+        foreach (var player in _playerWalk)
+        {
+            player.Speed = 1f;
+        }
     }
 }
