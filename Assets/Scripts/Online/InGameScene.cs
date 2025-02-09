@@ -21,6 +21,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
         _eventBus.Invoke(getPointsOfSpawn);
         _playerWalk.Add(PhotonNetwork.Instantiate(_playerPrefab.name, getPointsOfSpawn.Points.position, Quaternion.identity, 0).GetComponent<IPlayerWalk>());
         Debug.Log("Player Created");
+        StartCoroutine(StartOcklock());
     } 
     public void LeaveRoom()
     {
