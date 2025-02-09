@@ -78,9 +78,13 @@ public class GameMenu : MonoBehaviour, ITimeEnd
         PlaySoundForSingleClient();
         if (PhotonNetwork.IsConnectedAndReady)
         {
-            PhotonNetwork.LeaveRoom();
             PhotonNetwork.AutomaticallySyncScene = false;
+            PhotonNetwork.LeaveRoom();
             SceneManager.LoadScene("MainMenu");
+        }
+        else
+        {
+            Debug.LogError("Photon client is not connected or not ready.");
         }
     }
     private void PlaySoundForSingleClient()
