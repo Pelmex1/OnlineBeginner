@@ -79,6 +79,7 @@ public class GameMenu : MonoBehaviour, ITimeEnd
         if (PhotonNetwork.IsConnectedAndReady)
         {
             PhotonNetwork.LeaveRoom();
+            PhotonNetwork.AutomaticallySyncScene = false;
             SceneManager.LoadScene("MainMenu");
         }
     }
