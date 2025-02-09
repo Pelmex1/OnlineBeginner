@@ -55,7 +55,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
         if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
         {
             _playerCamera.enabled = true;
-            Speed += PLUS_TO_SPEED;
+            if(Speed != 0) {Speed += PLUS_TO_SPEED;}
             _horizontal = Input.GetAxisRaw("Horizontal");
             ChangePosition(_horizontal);
             if (_localPosition.Value != transform.position.z)
