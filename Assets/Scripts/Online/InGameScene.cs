@@ -37,10 +37,11 @@ public class InGameScene : MonoBehaviourPunCallbacks
         
     }
     private IEnumerator StartOcklock(){
-        int time = 3;
+        int time = 5;
         while(time > 0){
             yield return new WaitForSecondsRealtime(1);
             time--;
+            Debug.Log(time);
         }
         foreach (var player in _playerWalk)
         {
