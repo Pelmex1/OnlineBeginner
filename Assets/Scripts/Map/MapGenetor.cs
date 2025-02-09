@@ -17,7 +17,7 @@ public class MapGenerator : MonoBehaviour
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Subscribe<GetPointsOfSpawn>(GetPoints);
         _positionXOfSpawn = transform.position.x -100;
-        _positions = new float[]{_startSpawning.position.z - 5,_startSpawning.position.z - 1, _startSpawning.position.z + 5};
+        _positions = new float[]{_startSpawning.position.z - 5,_startSpawning.position.z , _startSpawning.position.z + 5};
         for (int i = 0; i < 50; i++)
         {
 
