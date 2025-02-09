@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
 {
-    public float Speed { get; set; }
+    public float Speed { get; set; } = 0;
     private const float PLUS_TO_SPEED = 0.1F;
     private float _horizontal;
     private Rigidbody _rb;
@@ -100,7 +100,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
         {
             Speed /= 2;
         }
-        if (other.tag.Equals("Finish"))
+        if (other.CompareTag("Finish"))
         {
             _endGame.OpenUI();
             _timeEnd.SetTime();
