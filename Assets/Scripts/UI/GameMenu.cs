@@ -38,7 +38,7 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
     [PunRPC]
     private void PlayBttSound()
     {
-        //audioSources.Play();
+        audioSources.Play();
     }
     public void SetTime()
     {
@@ -93,10 +93,9 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
     }
     private void PlaySoundForSingleClient()
     {
-        audioSources.Play();
-
-        // int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
-        // PhotonView photonView = PhotonView.Get(this);
-        // photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
+        //audioSources.Play();
+        int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
     }
 }
