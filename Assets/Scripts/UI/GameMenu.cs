@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class GameMenu : MonoBehaviour, ITimeEnd
+public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
 {
     private const float VolumeOn = -20f;
     private const float VolumeOff = -80f;
@@ -80,12 +80,16 @@ public class GameMenu : MonoBehaviour, ITimeEnd
         {
             PhotonNetwork.AutomaticallySyncScene = false;
             PhotonNetwork.LeaveRoom();
-            SceneManager.LoadScene("MainMenu");
         }
         else
         {
             Debug.LogError("Photon client is not connected or not ready.");
         }
+    }
+    public override void OnLeftRoom()
+    {
+        Debug.Log("Successfully left the room.");
+        SceneManager.LoadScene("MainMenu");
     }
     private void PlaySoundForSingleClient()
     {
