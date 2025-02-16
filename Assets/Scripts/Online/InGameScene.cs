@@ -22,7 +22,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
 
     public void Init(){
         _timer = _timeObject.GetComponent<TMP_Text>();
-        startGame = _timeObject.GetComponent<IStartGame>();
+        startGame = _startTextObject.GetComponent<IStartGame>();
         _playerWalk = new List<IPlayerWalk>();
         GetPointsOfSpawn getPointsOfSpawn = new();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
