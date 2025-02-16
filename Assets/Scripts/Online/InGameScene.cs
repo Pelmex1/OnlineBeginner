@@ -5,16 +5,24 @@ using OnlineBeginner.Consts;
 using OnlineBeginner.EventBus.Signals;
 using Photon.Pun;
 using Photon.Realtime;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class InGameScene : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private GameObject _timeObject;
+    [SerializeField] private GameObject _startTextObject;
     public static InGameScene instance;
     private EventBus _eventBus;
     private List<IPlayerWalk> _playerWalk;
+    private TMP_Text _timer;
+    IStartGame startGame;
+
     public void Init(){
+        _timer = _timeObject.GetComponent<TMP_Text>();
+        _timeObject.TryGetComponent<IStartGame>(out startGame);
         _playerWalk = new List<IPlayerWalk>();
         GetPointsOfSpawn getPointsOfSpawn = new();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
@@ -39,8 +47,14 @@ public class InGameScene : MonoBehaviourPunCallbacks
     private IEnumerator StartOcklock(){
         int time = 5;
         while(time > 0){
+            _timer.text = $"{time}";
             yield return new WaitForSecondsRealtime(1);
             time--;
+            if(time == 0){
+                _timeObject.SetActive(false);
+                _startTextObject.SetActive(true);
+                startGame.StartAnimation();
+            }
             Debug.Log(time);
         }
         foreach (var player in _playerWalk)
