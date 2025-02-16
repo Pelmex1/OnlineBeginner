@@ -18,6 +18,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
     private bool _cooldown = false;
     private EventBus _eventBus;
     private bool IsEnd = false;
+    private AudioListener _audioListener => GetComponent<AudioListener>();
     private CameraWork _cameraWork;
     private Camera _playerCamera;
     private GameObject _canvas;
@@ -39,12 +40,14 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
         _localPosition = positions.First; _localPosition = _localPosition.Next;
         if (photonView.IsMine)
         {
+            _audioListener.enabled = true;
             _playerCamera.enabled = true;
             _canvas.SetActive(true);
             _cameraWork.Init(_playerCamera);
         }
         else
         {
+            _audioListener.enabled = false;
             _canvas.SetActive(false);
             _playerCamera.enabled = false;
         }
