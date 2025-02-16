@@ -26,5 +26,6 @@ public class AnimationText : MonoBehaviour, IStartGame
             yield return null;
         }
         _transform.localScale = finalScale;
+        gameObject.SetActive(false);
     }
 }
