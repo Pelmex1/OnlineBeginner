@@ -19,6 +19,7 @@ namespace OnlineBeginner.Multiplayer
         private bool _isCreatedRoom = false;
         private bool _isConnected;
         private GameObject _startTextObjext;
+        private RoomOptions _roomOptions;    
 
         private void Awake()
         {
@@ -29,10 +30,6 @@ namespace OnlineBeginner.Multiplayer
         {
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
-        }
-        private void Update() {
-            if(_isConnected == true)
-                _onlineButton.interactable = true;
         }
         public void JoinRandomRoom()
         {
@@ -62,13 +59,13 @@ namespace OnlineBeginner.Multiplayer
         }
         private void CreateRoom()
         {
-            RoomOptions roomOptions = new()
+            _roomOptions = new()
             {
                 MaxPlayers = 2,
                 IsOpen = true,
                 IsVisible = true
             };
-            PhotonNetwork.CreateRoom(_createRoom.text,roomOptions);
+            PhotonNetwork.CreateRoom(_createRoom.text,_roomOptions);
             _isCreatedRoom = true;
             _createRoomPanel.SetActive(false);
         }
@@ -83,17 +80,22 @@ namespace OnlineBeginner.Multiplayer
         public override void OnConnectedToMaster()
         {
             _isConnected = true;
+            _onlineButton.interactable = true;
             Debug.Log("Succefully conected to server!");
         }
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
         {
             Debug.Log("Player entered on room");
             _isTwoPlayersInRoom = true;
+            _roomOptions.IsOpen = false;
+            _roomOptions.IsVisible = false;
             StartCoroutine(Wait());
         }
         public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
         {
             _isTwoPlayersInRoom = false;
+            _roomOptions.IsOpen = true;
+            _roomOptions.IsVisible = true;
         }
         private IEnumerator Wait()
         {

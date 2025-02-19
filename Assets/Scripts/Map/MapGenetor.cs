@@ -12,6 +12,7 @@ public class MapGenerator : MonoBehaviour
     private readonly int _countAddDistance  = 15;
     private Transform _startSpawning;
     private EventBus _eventBus;
+    private Vector3[] playersPositions;
     public void Init() {
         _startSpawning = transform;
         _eventBus = ServiceLocator.Current.Get<EventBus>();
@@ -20,10 +21,10 @@ public class MapGenerator : MonoBehaviour
         _positions = new float[]{_startSpawning.position.z - 5,_startSpawning.position.z , _startSpawning.position.z + 5};
         for (int i = 0; i < 50; i++)
         {
-
             RandomSpawn(_positions); 
-            
         }
+        playersPositions= new Vector3[] { new(transform.position.x,transform.position.y,_positions[0]), new(transform.position.x,transform.position.y,_positions[2])};
+        _eventBus.Subscribe<IPlayersPositionsSender>(PlayerPositionSend);
     }
     private void RandomSpawn(float[] positions){
         _three_positions = new List<float>(positions);
@@ -33,11 +34,14 @@ public class MapGenerator : MonoBehaviour
             _three_positions.Remove(randomZ);
             index++;
             Vector3 randomPosition = new (_positionXOfSpawn, _startSpawning.position.y, randomZ);
-            Instantiate(_prefab, randomPosition, _prefab.gameObject.transform.rotation);
+            Instantiate(_prefab, randomPosition, _prefab.transform.rotation);
         }
         _positionXOfSpawn -= _countAddDistance;
     }
     private void GetPoints(GetPointsOfSpawn getPointsOfSpawn){
         getPointsOfSpawn.Points = _startSpawning;
+    }
+    private void PlayerPositionSend(IPlayersPositionsSender playersPositionsSender){
+        playersPositionsSender.Positions = playersPositions;
     }
 }

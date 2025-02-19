@@ -71,7 +71,10 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
     }
     private void ChangePosition(float horizontal)
     {
-        if (horizontal == 0 || _cooldown) { return; }
+        if (horizontal == 0 || _cooldown) 
+        {
+            return; 
+        }
         LinkedListNode<float> pos;
         if (horizontal == 1)
         {
