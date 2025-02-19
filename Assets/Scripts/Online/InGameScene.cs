@@ -21,6 +21,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
     private List<IPlayerWalk> _playerWalk;
     private TMP_Text _timer;
     private IStartGame _startGame;
+    private Queue<Vector3> positions;
 
     public void Init(){
         _timer = _timeObject.GetComponent<TMP_Text>();
@@ -31,12 +32,13 @@ public class InGameScene : MonoBehaviourPunCallbacks
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
+        for (int i = 0; i < playersPositionsSender.Positions.Length; i++)
+        {
+            positions.Enqueue(playersPositionsSender.Positions[i]);
+        }
         Debug.Log("Player Created");
         StartCoroutine(StartOcklock());
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            SpawnPlayer(playersPositionsSender.Positions[i]);
-        }
+        PhotonNetwork.Instantiate("Player",positions.Peek(),Quaternion.identity);
     } 
     public void LeaveRoom()
     {
@@ -69,7 +71,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
             player.Speed = 1f;
         }
     }
-    public void SpawnPlayer(Vector3 position)
+   /* public void SpawnPlayer(Vector3 position)
 {
     GameObject player = Instantiate(_playerPrefab, position, Quaternion.identity); 
     PhotonView photonView = player.GetComponent<PhotonView>();
@@ -102,7 +104,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
         Destroy(player);
     }
 }
-/*public void OnEvent(EventData photonEvent)
+public void OnEvent(EventData photonEvent)
 {
     if (photonEvent.Code == CustomManualInstantiationEventCode)
     {
@@ -114,6 +116,10 @@ public class InGameScene : MonoBehaviourPunCallbacks
 
     }
 }*/
+public void OnPhotonInstantiate(PhotonMessageInfo info)
+{
+    _playerWalk.Add(info.photonView.gameObject.GetComponent<IPlayerWalk>());
+}
 private void OnEnable()
 {
     base.OnEnable();
