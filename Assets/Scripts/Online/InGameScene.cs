@@ -10,7 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
+public class InGameScene : MonoBehaviourPunCallbacks
 {
     private const byte CustomManualInstantiationEventCode = 1;
     [SerializeField] private GameObject _playerPrefab;
@@ -93,7 +93,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         };
 
         PhotonNetwork.RaiseEvent(CustomManualInstantiationEventCode, data, raiseEventOptions, sendOptions);
-        Destroy(player);
+        _playerWalk.Add(player.GetComponent<IPlayerWalk>());
     }
     else
     {
@@ -102,7 +102,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         Destroy(player);
     }
 }
-public void OnEvent(EventData photonEvent)
+/*public void OnEvent(EventData photonEvent)
 {
     if (photonEvent.Code == CustomManualInstantiationEventCode)
     {
@@ -110,10 +110,10 @@ public void OnEvent(EventData photonEvent)
 
         GameObject player = Instantiate(_playerPrefab, (Vector3) data[0], (Quaternion) data[1]);
         PhotonView photonView = player.GetComponent<PhotonView>();
-        _playerWalk.Add(player.GetComponent<IPlayerWalk>());
         photonView.ViewID = (int) data[2];
+
     }
-}
+}*/
 private void OnEnable()
 {
     base.OnEnable();
