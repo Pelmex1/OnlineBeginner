@@ -33,7 +33,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         _eventBus.Invoke(playersPositionsSender);
         Debug.Log("Player Created");
         StartCoroutine(StartOcklock());
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
         {
             SpawnPlayer(playersPositionsSender.Positions[i]);
         }
@@ -93,6 +93,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         };
 
         PhotonNetwork.RaiseEvent(CustomManualInstantiationEventCode, data, raiseEventOptions, sendOptions);
+        Destroy(player);
     }
     else
     {
@@ -109,6 +110,7 @@ public void OnEvent(EventData photonEvent)
 
         GameObject player = Instantiate(_playerPrefab, (Vector3) data[0], (Quaternion) data[1]);
         PhotonView photonView = player.GetComponent<PhotonView>();
+        _playerWalk.Add(player.GetComponent<IPlayerWalk>());
         photonView.ViewID = (int) data[2];
     }
 }
