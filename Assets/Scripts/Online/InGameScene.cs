@@ -32,11 +32,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
-        for (int i = 0; i < playersPositionsSender.Positions.Length; i++)
-        {
-            positions.Enqueue(playersPositionsSender.Positions[i]);
-        }
-        Debug.Log("Player Created");
+        positions  = new(playersPositionsSender.Positions);
         StartCoroutine(StartOcklock());
         PhotonNetwork.Instantiate("Player",positions.Peek(),Quaternion.identity);
     } 
