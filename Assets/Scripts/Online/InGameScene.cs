@@ -12,16 +12,14 @@ using UnityEngine.SceneManagement;
 
 public class InGameScene : MonoBehaviourPunCallbacks
 {
-    private const byte CustomManualInstantiationEventCode = 1;
-    [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private GameObject _timeObject;
     [SerializeField] private GameObject _startTextObject;
-    public static InGameScene instance;
     private EventBus _eventBus;
     private List<IPlayerWalk> _playerWalk;
     private TMP_Text _timer;
     private IStartGame _startGame;
-    private Queue<Vector3> positions;
+    private Vector3[] _positions;   
+    private const byte OnPhotonPlayerSpawned = 1;
 
     public void Init(){
         _timer = _timeObject.GetComponent<TMP_Text>();
@@ -32,9 +30,9 @@ public class InGameScene : MonoBehaviourPunCallbacks
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
-        positions  = new(playersPositionsSender.Positions);
+        _positions  = playersPositionsSender.Positions;
         StartCoroutine(StartOcklock());
-        PhotonNetwork.Instantiate("Player",positions.Peek(),Quaternion.identity);
+        PhotonNetwork.Instantiate("Player",_positions[0],Quaternion.identity);
     } 
     public void LeaveRoom()
     {
@@ -67,63 +65,50 @@ public class InGameScene : MonoBehaviourPunCallbacks
             player.Speed = 1f;
         }
     }
-   /* public void SpawnPlayer(Vector3 position)
-{
-    GameObject player = Instantiate(_playerPrefab, position, Quaternion.identity); 
-    PhotonView photonView = player.GetComponent<PhotonView>();
-
-    if (PhotonNetwork.AllocateViewID(photonView))
+    public void OnEvent(EventData photonEvent)
     {
-        object[] data = new object[]
+        if (photonEvent.Code == OnPhotonPlayerSpawned)
         {
-            player.transform.position, player.transform.rotation, photonView.ViewID
-        };
-
-        RaiseEventOptions raiseEventOptions = new()
-        {
-            Receivers = ReceiverGroup.Others,
-            CachingOption = EventCaching.AddToRoomCache
-        };
-
-        SendOptions sendOptions = new()
-        {
-            Reliability = true
-        };
-
-        PhotonNetwork.RaiseEvent(CustomManualInstantiationEventCode, data, raiseEventOptions, sendOptions);
-        _playerWalk.Add(player.GetComponent<IPlayerWalk>());
+            object[] data = (object[]) photonEvent.CustomData;
+            _playerWalk.Add((IPlayerWalk) data[0]);
+        }
     }
-    else
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        Debug.LogError("Failed to allocate a ViewId.");
+        if(!PhotonNetwork.IsMasterClient)
+        {
+            info.photonView.gameObject.transform.position = _positions[1];
+            object[] data = new object[]
+            {
+                info.photonView.gameObject.GetComponent<IPlayerWalk>()
+            };
 
-        Destroy(player);
+            RaiseEventOptions raiseEventOptions = new()
+            {
+                Receivers = ReceiverGroup.Others,
+                CachingOption = EventCaching.AddToRoomCache
+            };
+
+            SendOptions sendOptions = new()
+            {
+                Reliability = true
+            };
+
+            PhotonNetwork.RaiseEvent(OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
+        } 
+        else
+        {
+            _playerWalk.Add(info.photonView.gameObject.GetComponent<IPlayerWalk>());
+        }
     }
-}
-public void OnEvent(EventData photonEvent)
-{
-    if (photonEvent.Code == CustomManualInstantiationEventCode)
+    private void OnEnable()
     {
-        object[] data = (object[]) photonEvent.CustomData;
-
-        GameObject player = Instantiate(_playerPrefab, (Vector3) data[0], (Quaternion) data[1]);
-        PhotonView photonView = player.GetComponent<PhotonView>();
-        photonView.ViewID = (int) data[2];
-
+        base.OnEnable();
+        PhotonNetwork.AddCallbackTarget(this);
     }
-}*/
-public void OnPhotonInstantiate(PhotonMessageInfo info)
-{
-    _playerWalk.Add(info.photonView.gameObject.GetComponent<IPlayerWalk>());
-}
-private void OnEnable()
-{
-    base.OnEnable();
-    PhotonNetwork.AddCallbackTarget(this);
-}
-private void OnDisable()
-{
-    base.OnDisable();
-    PhotonNetwork.RemoveCallbackTarget(this);        
-}
+    private void OnDisable()
+    {
+        base.OnDisable();
+        PhotonNetwork.RemoveCallbackTarget(this);        
+    }
 }
