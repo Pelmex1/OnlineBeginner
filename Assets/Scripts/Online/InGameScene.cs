@@ -10,7 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class InGameScene : MonoBehaviourPunCallbacks
+public class InGameScene : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     [SerializeField] private GameObject _timeObject;
     [SerializeField] private GameObject _startTextObject;
@@ -77,6 +77,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
             _playerWalk.Add((IPlayerWalk) data[0]);
         }
     }
+    
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>();
