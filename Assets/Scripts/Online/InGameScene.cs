@@ -60,9 +60,13 @@ public class InGameScene : MonoBehaviourPunCallbacks
             }
             Debug.Log(time);
         }
-        foreach (var player in _playerWalk)
+        /*foreach (var player in _playerWalk)
         {
             player.Speed = 1f;
+        }*/
+        for (int i = 0; i < _playerWalk.Count; i++)
+        {
+            _playerWalk[i].Speed = 1f;
         }
     }
     public void OnEvent(EventData photonEvent)
@@ -93,7 +97,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
             {
                 Reliability = true
             };
-
+            playerWalk.Init();
             PhotonNetwork.RaiseEvent(OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
         } 
         else

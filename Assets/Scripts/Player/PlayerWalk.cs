@@ -36,7 +36,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
         
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(_endGame);
-
+        Debug.Log(_playerCamera);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         LocalPosition = PhotonNetwork.IsMasterClient ? positions.First : positions.Last;
         if (photonView.IsMine)
@@ -45,12 +45,14 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
             _playerCamera.enabled = true;
             _canvas.SetActive(true);
             _cameraWork.Init(_playerCamera);
+            Debug.Log(_playerCamera);
         }
         else
         {
             _audioListener.enabled = false;
             _canvas.SetActive(false);
             _playerCamera.enabled = false;
+            Debug.Log(_playerCamera);
         }
 
     }
@@ -58,6 +60,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
     {
         if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
         {
+            Debug.Log(_playerCamera);
             _playerCamera.enabled = true;
             if(Speed != 0) {Speed += PLUS_TO_SPEED;}
             _horizontal = Input.GetAxisRaw("Horizontal");
