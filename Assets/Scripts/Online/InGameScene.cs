@@ -32,7 +32,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
         _eventBus.Invoke(playersPositionsSender);
         _positions  = playersPositionsSender.Positions;
         StartCoroutine(StartOcklock());
-        PhotonNetwork.Instantiate("Player",_positions[0],Quaternion.identity);
+        PhotonNetwork.Instantiate("Player",_positions[1],Quaternion.identity);
     } 
     public void LeaveRoom()
     {
@@ -75,12 +75,12 @@ public class InGameScene : MonoBehaviourPunCallbacks
     }
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
+        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>();
         if(!PhotonNetwork.IsMasterClient)
-        {
-            info.photonView.gameObject.transform.position = _positions[1];
+        {   
             object[] data = new object[]
-            {
-                info.photonView.gameObject.GetComponent<IPlayerWalk>()
+            {         
+                playerWalk
             };
 
             RaiseEventOptions raiseEventOptions = new()
@@ -98,7 +98,8 @@ public class InGameScene : MonoBehaviourPunCallbacks
         } 
         else
         {
-            _playerWalk.Add(info.photonView.gameObject.GetComponent<IPlayerWalk>());
+            playerWalk.Init();
+            _playerWalk.Add(playerWalk);
         }
     }
     private void OnEnable()

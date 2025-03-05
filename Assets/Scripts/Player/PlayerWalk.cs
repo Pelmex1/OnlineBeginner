@@ -13,19 +13,20 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
     private float _horizontal;
     private Rigidbody _rb;
     private LinkedList<float> positions;
-    private LinkedListNode<float> _localPosition;
+    private LinkedListNode<float> LocalPosition;
     private readonly float _index = 5;
     private bool _cooldown = false;
     private EventBus _eventBus;
     private bool IsEnd = false;
-    private AudioListener _audioListener => GetComponent<AudioListener>();
+    private AudioListener _audioListener;
     private CameraWork _cameraWork;
     private Camera _playerCamera;
     private GameObject _canvas;
     private IEndGame _endGame;
     private ITimeEnd _timeEnd;
-    public void Start()
+    public void Init()
     {
+        _audioListener = GetComponent<AudioListener>();
         _canvas = GetComponentInChildren<Canvas>().gameObject;
         _playerCamera = GetComponentInChildren<Camera>();
         _cameraWork = GetComponent<CameraWork>();
@@ -34,10 +35,10 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
         _timeEnd = GetComponent<ITimeEnd>();
         
         _eventBus = ServiceLocator.Current.Get<EventBus>();
-        _eventBus.Invoke<IEndGame>(_endGame);
+        _eventBus.Invoke(_endGame);
 
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
-        _localPosition = positions.First; _localPosition = _localPosition.Next;
+        LocalPosition = PhotonNetwork.IsMasterClient ? positions.First : positions.Last;
         if (photonView.IsMine)
         {
             _audioListener.enabled = true;
@@ -61,9 +62,9 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
             if(Speed != 0) {Speed += PLUS_TO_SPEED;}
             _horizontal = Input.GetAxisRaw("Horizontal");
             ChangePosition(_horizontal);
-            if (_localPosition.Value != transform.position.z)
+            if (LocalPosition.Value != transform.position.z)
             {
-                transform.position = Vector3.Lerp(transform.position, new(transform.position.x, transform.position.y, _localPosition.Value), Time.fixedTime * Speed);
+                transform.position = Vector3.Lerp(transform.position, new(transform.position.x, transform.position.y, LocalPosition.Value), Time.fixedTime * Speed);
             }
             _rb.MovePosition(_rb.position + Speed * Time.fixedDeltaTime * -transform.right);
         }
@@ -78,18 +79,18 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
         LinkedListNode<float> pos;
         if (horizontal == 1)
         {
-            pos = _localPosition.Next;
+            pos = LocalPosition.Next;
             if (pos != null)
             {
-                _localPosition = pos;
+                LocalPosition = pos;
             }
         }
         else if (horizontal != 1)
         {
-            pos = _localPosition.Previous;
+            pos = LocalPosition.Previous;
             if (pos != null)
             {
-                _localPosition = pos;
+                LocalPosition = pos;
             }
         }
         StartCoroutine(Cooldown());
@@ -113,6 +114,4 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
             IsEnd = true;
         }
     }
-
-
 }
