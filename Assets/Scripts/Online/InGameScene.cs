@@ -10,7 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class InGameScene : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
+public class InGameScene : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject _timeObject;
     [SerializeField] private GameObject _startTextObject;
@@ -19,7 +19,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallba
     private TMP_Text _timer;
     private IStartGame _startGame;
     private Vector3[] _positions;   
-    private const byte OnPhotonPlayerSpawned = 1;
+
 
     public void Init(){
         _timer = _timeObject.GetComponent<TMP_Text>();
@@ -60,53 +60,21 @@ public class InGameScene : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallba
             }
             Debug.Log(time);
         }
-        /*foreach (var player in _playerWalk)
+        foreach (var player in _playerWalk)
         {
             player.Speed = 1f;
-        }*/
-        for (int i = 0; i < _playerWalk.Count; i++)
-        {
-            _playerWalk[i].Speed = 1f;
         }
     }
     public void OnEvent(EventData photonEvent)
     {
-        if (photonEvent.Code == OnPhotonPlayerSpawned)
+        if (photonEvent.Code == StringConstants.OnPhotonPlayerSpawned)
         {
             object[] data = (object[]) photonEvent.CustomData;
             _playerWalk.Add((IPlayerWalk) data[0]);
         }
     }
     
-    public void OnPhotonInstantiate(PhotonMessageInfo info)
-    {
-        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>();
-        if(!PhotonNetwork.IsMasterClient)
-        {   
-            object[] data = new object[]
-            {         
-                playerWalk
-            };
 
-            RaiseEventOptions raiseEventOptions = new()
-            {
-                Receivers = ReceiverGroup.Others,
-                CachingOption = EventCaching.AddToRoomCache
-            };
-
-            SendOptions sendOptions = new()
-            {
-                Reliability = true
-            };
-            playerWalk.Init();
-            PhotonNetwork.RaiseEvent(OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
-        } 
-        else
-        {
-            playerWalk.Init();
-            _playerWalk.Add(playerWalk);
-        }
-    }
     private void OnEnable()
     {
         base.OnEnable();

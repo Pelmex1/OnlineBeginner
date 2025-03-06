@@ -43,7 +43,6 @@ public class MapGenerator : MonoBehaviour
     }
     private void PlayerPositionSend(IPlayersPositionsSender playersPositionsSender){
         playersPositionsSender.Positions = playersPositions;
-        Debug.Log("Work");
         Debug.Log(playersPositions);
     }
 }

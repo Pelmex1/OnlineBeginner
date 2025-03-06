@@ -2,11 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using CustomEventBus;
+using ExitGames.Client.Photon;
+using OnlineBeginner.Consts;
 using OnlineBeginner.Online;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 
-public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
+public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCallback
 {
     public float Speed { get; set; } = 0;
     private const float PLUS_TO_SPEED = 0.1F;
@@ -116,5 +119,30 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk
             _timeEnd.SetTime();
             IsEnd = true;
         }
+    }
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        Debug.Log("START");
+        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>();
+        if(!PhotonNetwork.IsMasterClient)
+        {   
+            object[] data = new object[]
+            {         
+                playerWalk
+            };
+
+            RaiseEventOptions raiseEventOptions = new()
+            {
+                Receivers = ReceiverGroup.Others,
+                CachingOption = EventCaching.AddToRoomCache
+            };
+
+            SendOptions sendOptions = new()
+            {
+                Reliability = true
+            };
+            playerWalk.Init();
+            PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
+        } 
     }
 }
