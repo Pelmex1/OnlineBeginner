@@ -29,6 +29,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     private ITimeEnd _timeEnd;
     public void Init()
     {
+        Debug.Log("INIT");
         _audioListener = GetComponent<AudioListener>();
         _canvas = GetComponentInChildren<Canvas>().gameObject;
         _playerCamera = GetComponentInChildren<Camera>();
@@ -123,26 +124,23 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         Debug.Log("START");
-        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>();
-        if(!PhotonNetwork.IsMasterClient)
-        {   
-            object[] data = new object[]
-            {         
-                playerWalk
-            };
+        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>(); 
+        object[] data = new object[]
+        {         
+            playerWalk
+        };
 
-            RaiseEventOptions raiseEventOptions = new()
-            {
-                Receivers = ReceiverGroup.Others,
-                CachingOption = EventCaching.AddToRoomCache
-            };
+        RaiseEventOptions raiseEventOptions = new()
+        {
+            Receivers = ReceiverGroup.Others,
+            CachingOption = EventCaching.AddToRoomCache
+        };
 
-            SendOptions sendOptions = new()
-            {
-                Reliability = true
-            };
-            playerWalk.Init();
-            PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
-        } 
+        SendOptions sendOptions = new()
+        {
+            Reliability = true
+        };
+        playerWalk.Init();
+        PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
     }
 }
