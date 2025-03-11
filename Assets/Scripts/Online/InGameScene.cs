@@ -10,7 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class InGameScene : MonoBehaviourPunCallbacks
+public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
 {
     [SerializeField] private GameObject _timeObject;
     [SerializeField] private GameObject _startTextObject;

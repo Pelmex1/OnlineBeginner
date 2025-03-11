@@ -9,7 +9,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCallback
+public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCallback, IOnEventCallback
 {
     public float Speed { get; set; } = 0;
     private const float PLUS_TO_SPEED = 0.1F;
