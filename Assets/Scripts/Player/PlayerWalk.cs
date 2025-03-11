@@ -148,4 +148,13 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
             Debug.Log("speedadd");
         }
     }
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
+    }
 }

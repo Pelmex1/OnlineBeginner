@@ -69,7 +69,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         RaiseEventOptions raiseEventOptions = new()
         {
             Receivers = ReceiverGroup.All,
-            CachingOption = EventCaching.AddToRoomCache
+            CachingOption = EventCaching.AddToRoomCacheGlobal
         };
 
         SendOptions sendOptions = new()
@@ -81,6 +81,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     }
     public void OnEvent(EventData photonEvent)
     {
+        Debug.Log("GET PLAYER");
         if (photonEvent.Code == StringConstants.OnPhotonPlayerSpawned)
         {
             _players += 1;
