@@ -61,18 +61,14 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
             }
             Debug.Log(time);
         }
-        foreach (var player in _playerWalk)
-        {
-            player.Speed = 1f;
-        }
-            object[] data = new object[]
+        object[] data = new object[]
         {       
               
         };
 
         RaiseEventOptions raiseEventOptions = new()
         {
-            Receivers = ReceiverGroup.Others,
+            Receivers = ReceiverGroup.All,
             CachingOption = EventCaching.AddToRoomCache
         };
 
@@ -80,6 +76,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             Reliability = true
         };
+        Debug.Log("start?");
         PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
     }
     public void OnEvent(EventData photonEvent)

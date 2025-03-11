@@ -40,7 +40,6 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(_endGame);
-        Debug.Log(_playerCamera);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         LocalPosition = PhotonNetwork.IsMasterClient ? positions.First : positions.Last;
         if (photonView.IsMine)
@@ -49,14 +48,12 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
             _playerCamera.enabled = true;
             _canvas.SetActive(true);
             _cameraWork.Init(_playerCamera);
-            Debug.Log(_playerCamera);
         }
         else
         {
             _audioListener.enabled = false;
             _canvas.SetActive(false);
             _playerCamera.enabled = false;
-            Debug.Log(_playerCamera);
         }
 
     }
@@ -64,7 +61,6 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     {
         if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
         {
-            Debug.Log(_playerCamera);
             _playerCamera.enabled = true;
             if(Speed != 0) {Speed += PLUS_TO_SPEED;}
             _horizontal = Input.GetAxisRaw("Horizontal");
@@ -130,7 +126,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
 
         RaiseEventOptions raiseEventOptions = new()
         {
-            Receivers = ReceiverGroup.Others,
+            Receivers = ReceiverGroup.MasterClient,
             CachingOption = EventCaching.AddToRoomCache
         };
 
@@ -138,15 +134,18 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         {
             Reliability = true
         };
+        Debug.Log("SEND PLAYER");
         IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>(); 
         playerWalk.Init();
         PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
     }
     public void OnEvent(EventData photonEvent)
     {
+        Debug.Log("reseived");
         if (photonEvent.Code == StringConstants.ON_MATCH_START)
         {
             Speed = 1;
+            Debug.Log("speedadd");
         }
     }
 }
