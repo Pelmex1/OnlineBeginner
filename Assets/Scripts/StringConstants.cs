@@ -6,5 +6,6 @@ namespace OnlineBeginner.Consts
         public const string NAME_MAIN_MENU = "MainMenu";
         public const string NAME_OBSTACLE = "Obstacle";
         public const byte OnPhotonPlayerSpawned = 1;
+        public const byte ON_MATCH_START = 2;
     }
 }

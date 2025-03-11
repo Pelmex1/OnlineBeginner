@@ -19,6 +19,7 @@ public class InGameScene : MonoBehaviourPunCallbacks
     private TMP_Text _timer;
     private IStartGame _startGame;
     private Vector3[] _positions;   
+    private int _players = 0;
 
 
     public void Init(){
@@ -31,8 +32,8 @@ public class InGameScene : MonoBehaviourPunCallbacks
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
         _positions  = playersPositionsSender.Positions;
-        StartCoroutine(StartOcklock());
         PhotonNetwork.Instantiate("Player",_positions[1],Quaternion.identity);
+
     } 
     public void LeaveRoom()
     {
@@ -64,13 +65,32 @@ public class InGameScene : MonoBehaviourPunCallbacks
         {
             player.Speed = 1f;
         }
+            object[] data = new object[]
+        {       
+              
+        };
+
+        RaiseEventOptions raiseEventOptions = new()
+        {
+            Receivers = ReceiverGroup.Others,
+            CachingOption = EventCaching.AddToRoomCache
+        };
+
+        SendOptions sendOptions = new()
+        {
+            Reliability = true
+        };
+        PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
     }
     public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code == StringConstants.OnPhotonPlayerSpawned)
         {
-            object[] data = (object[]) photonEvent.CustomData;
-            _playerWalk.Add((IPlayerWalk) data[0]);
+            _players += 1;
+            if(_players == PhotonNetwork.CurrentRoom.MaxPlayers)
+            {
+                StartCoroutine(StartOcklock());
+            }
         }
     }
     

@@ -123,11 +123,9 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     }
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        Debug.Log("START");
-        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>(); 
         object[] data = new object[]
-        {         
-            playerWalk
+        {       
+              
         };
 
         RaiseEventOptions raiseEventOptions = new()
@@ -140,7 +138,15 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         {
             Reliability = true
         };
+        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>(); 
         playerWalk.Init();
         PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
+    }
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == StringConstants.ON_MATCH_START)
+        {
+            Speed = 1;
+        }
     }
 }
