@@ -18,7 +18,6 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private List<IPlayerWalk> _playerWalk;
     private TMP_Text _timer;
     private IStartGame _startGame;
-    private Vector3[] _positions;   
     private int _players = 0;
 
 
@@ -31,9 +30,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
-        _positions  = playersPositionsSender.Positions;
-        PhotonNetwork.Instantiate("Player",_positions[1],Quaternion.identity);
-
+        PhotonNetwork.Instantiate("Player",playersPositionsSender.Positions[1],Quaternion.identity);
     } 
     public void LeaveRoom()
     {

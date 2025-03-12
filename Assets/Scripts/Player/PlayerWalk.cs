@@ -29,7 +29,6 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     private ITimeEnd _timeEnd;
     public void Init()
     {
-        Debug.Log("INIT");
         _audioListener = GetComponent<AudioListener>();
         _canvas = GetComponentInChildren<Canvas>().gameObject;
         _playerCamera = GetComponentInChildren<Camera>();
@@ -42,6 +41,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         _eventBus.Invoke(_endGame);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         LocalPosition = PhotonNetwork.IsMasterClient ? positions.First : positions.Last;
+        transform.position = new(transform.position.x, transform.position.y, LocalPosition.Value);
         if (photonView.IsMine)
         {
             _audioListener.enabled = true;
@@ -134,18 +134,15 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         {
             Reliability = true
         };
-        Debug.Log("SEND PLAYER");
         IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>(); 
         playerWalk.Init();
         PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
     }
     public void OnEvent(EventData photonEvent)
     {
-        Debug.Log("reseived");
         if (photonEvent.Code == StringConstants.ON_MATCH_START)
         {
             Speed = 1;
-            Debug.Log("speedadd");
         }
     }
     private void OnEnable()

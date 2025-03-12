@@ -17,13 +17,13 @@ public class MapGenerator : MonoBehaviour
         _startSpawning = transform;
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Subscribe<GetPointsOfSpawn>(GetPoints);
-        _positionXOfSpawn = transform.position.x -100;
+        _positionXOfSpawn = transform.position.x - 100;
         _positions = new float[]{_startSpawning.position.z - 5,_startSpawning.position.z , _startSpawning.position.z + 5};
         for (int i = 0; i < 50; i++)
         {
             RandomSpawn(_positions); 
         }
-        playersPositions= new Vector3[] { new(transform.position.x,transform.position.y,_positions[0]), new(transform.position.x,transform.position.y,_positions[2])};
+        playersPositions= new Vector3[] { new(transform.position.x,transform.position.y,_positions[0]), new(transform.position.x,transform.position.y,_positions[1]), new(transform.position.x,transform.position.y,_positions[2])};
         _eventBus.Subscribe<IPlayersPositionsSender>(PlayerPositionSend);
     }
     private void RandomSpawn(float[] positions){
