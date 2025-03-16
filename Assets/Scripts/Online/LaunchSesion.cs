@@ -19,7 +19,7 @@ namespace OnlineBeginner.Multiplayer
         private bool _isTwoPlayersInRoom;
         private bool _isCreatedRoom = false;
         private bool _isConnected;
-        
+
         private RoomOptions _roomOptions;
         private void Awake()
         {
@@ -105,7 +105,6 @@ namespace OnlineBeginner.Multiplayer
         private IEnumerator Wait()
         {
             _loadingScene.SetActive(true);
-            _startTextObjext.SetActive(true);
             for (int i = 5; i > 0; i--)
             {
                 if (_isTwoPlayersInRoom)
@@ -126,7 +125,12 @@ namespace OnlineBeginner.Multiplayer
             }
         }
         [PunRPC]
-        public void TextForStart(int i) => _startText.text = $"{i}";
+        public void TextForStart(int i)
+        {
+            if (i == 5)
+                _startTextObjext.SetActive(true);
+            _startText.text = $"{i}";
+        }
         public override void OnDisconnected(DisconnectCause cause)
         {
             _isConnected = false;
