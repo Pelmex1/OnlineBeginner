@@ -20,7 +20,6 @@ namespace OnlineBeginner.Multiplayer
         private bool _isConnected;
         private GameObject _startTextObjext;
         private RoomOptions _roomOptions;
-
         private void Awake()
         {
             PhotonNetwork.AutomaticallySyncScene = true;
@@ -31,8 +30,7 @@ namespace OnlineBeginner.Multiplayer
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
         }
-        [PunRPC]
-        void TextForStart(int i) => _startText.text = $"{i}";
+
         public void JoinRandomRoom()
         {
             _loadingScene.SetActive(true);
@@ -126,6 +124,8 @@ namespace OnlineBeginner.Multiplayer
                 }
             }
         }
+        [PunRPC]
+        void TextForStart(int i) => _startText.text = $"{i}";
         public override void OnDisconnected(DisconnectCause cause)
         {
             _isConnected = false;

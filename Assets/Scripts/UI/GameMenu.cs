@@ -35,11 +35,7 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
             _timeText.text = $"{(int)time}";
         }
     }
-    [PunRPC]
-    private void PlayBttSound()
-    {
-        audioSources.Play();
-    }
+
     public void SetTime()
     {
         isEnd = true;
@@ -97,5 +93,10 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
         int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
         PhotonView photonView = PhotonView.Get(this);
         photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
+    }
+    [PunRPC]
+    private void PlayBttSound()
+    {
+        audioSources.Play();
     }
 }
