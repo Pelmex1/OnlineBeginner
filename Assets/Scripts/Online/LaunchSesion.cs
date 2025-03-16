@@ -19,7 +19,7 @@ namespace OnlineBeginner.Multiplayer
         private bool _isCreatedRoom = false;
         private bool _isConnected;
         private GameObject _startTextObjext;
-        private RoomOptions _roomOptions;    
+        private RoomOptions _roomOptions;
 
         private void Awake()
         {
@@ -31,14 +31,20 @@ namespace OnlineBeginner.Multiplayer
             PhotonNetwork.ConnectUsingSettings();
             PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
         }
+        [PunRPC]
+        void TextForStart(int i) => _startText.text = $"{i}";
         public void JoinRandomRoom()
         {
             _loadingScene.SetActive(true);
-            if(!_isCreatedRoom){
-                if(_isConnected){
+            if (!_isCreatedRoom)
+            {
+                if (_isConnected)
+                {
                     PhotonNetwork.JoinRandomRoom();
                     _isConnected = false;
-                } else {
+                }
+                else
+                {
                     _isConnected = PhotonNetwork.ConnectUsingSettings();
                     PhotonNetwork.GameVersion = StringConstants.GAME_VERSION;
                 }
@@ -46,7 +52,8 @@ namespace OnlineBeginner.Multiplayer
         }
         public override void OnJoinedRoom()
         {
-            if(PhotonNetwork.PlayerList.Length > 1){
+            if (PhotonNetwork.PlayerList.Length > 1)
+            {
                 Wait();
             }
         }
@@ -65,7 +72,7 @@ namespace OnlineBeginner.Multiplayer
                 IsOpen = true,
                 IsVisible = true
             };
-            PhotonNetwork.CreateRoom(_createRoom.text,_roomOptions);
+            PhotonNetwork.CreateRoom(_createRoom.text, _roomOptions);
             _isCreatedRoom = true;
             _createRoomPanel.SetActive(false);
         }
@@ -101,20 +108,24 @@ namespace OnlineBeginner.Multiplayer
         {
             _loadingScene.SetActive(true);
             _startTextObjext.SetActive(true);
-            for(int i = 5; i > 0; i--){
-                if(_isTwoPlayersInRoom){
-                    _startText.text = $"{i}";
+            for (int i = 5; i > 0; i--)
+            {
+                if (_isTwoPlayersInRoom)
+                {
+                    photonView.RPC("TextForStart", RpcTarget.All, i);
+                    //_startText.text = $"{i}";
                     yield return new WaitForSecondsRealtime(1);
-                    if(_isTwoPlayersInRoom && i == 1)
+                    if (_isTwoPlayersInRoom && i == 1)
                     {
                         PhotonNetwork.LoadLevel("GameScene");
-                    } else {
+                    }
+                    else
+                    {
                         continue;
                     }
+                }
             }
-
         }
-    }
         public override void OnDisconnected(DisconnectCause cause)
         {
             _isConnected = false;
