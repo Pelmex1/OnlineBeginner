@@ -43,6 +43,7 @@ MonoBehaviour:
   - PlayMainMusic
   - IsEndForRunning
   - MainMusic
+  - TextForStart
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
