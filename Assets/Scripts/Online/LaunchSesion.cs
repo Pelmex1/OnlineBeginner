@@ -110,6 +110,7 @@ namespace OnlineBeginner.Multiplayer
             {
                 if (_isTwoPlayersInRoom)
                 {
+                    PhotonNetwork.AutomaticallySyncScene = true;
                     photonView.RPC("TextForStart", RpcTarget.All, i);
                     //_startText.text = $"{i}";
                     yield return new WaitForSecondsRealtime(1);
@@ -125,7 +126,7 @@ namespace OnlineBeginner.Multiplayer
             }
         }
         [PunRPC]
-        void TextForStart(int i) => _startText.text = $"{i}";
+        public void TextForStart(int i) => _startText.text = $"{i}";
         public override void OnDisconnected(DisconnectCause cause)
         {
             _isConnected = false;
