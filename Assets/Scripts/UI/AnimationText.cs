@@ -1,5 +1,7 @@
 using System.Collections;
+using Photon.Pun.Demo.Cockpit;
 using UnityEngine;
+using Photon.Pun;
 
 public class AnimationText : MonoBehaviour, IStartGame
 {

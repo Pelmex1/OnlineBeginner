@@ -19,9 +19,11 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private TMP_Text _timer;
     private IStartGame _startGame;
     private int _players = 0;
+    private PhotonView _photonView;
 
 
     public void Init(){
+        _photonView = GetComponent<PhotonView>();
         _timer = _timeObject.GetComponent<TMP_Text>();
         _startGame = _startTextObject.GetComponent<IStartGame>();
         _playerWalk = new List<IPlayerWalk>();
@@ -48,7 +50,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private IEnumerator StartOcklock(){
         int time = 5;
         while(time > 0){
-            _timer.text = $"{time}";
+            _photonView.RPC("AccountingTime", RpcTarget.All, time);
             yield return new WaitForSecondsRealtime(1);
             time--;
             if(time == 0){
@@ -75,6 +77,11 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         };
         Debug.Log("start?");
         PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
+    }
+    [PunRPC]
+    void AccountingTime(int time) 
+    {
+        _timer.text = $"{time}";
     }
     public void OnEvent(EventData photonEvent)
     {
