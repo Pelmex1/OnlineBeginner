@@ -10,6 +10,7 @@ namespace OnlineBeginner.Multiplayer
     public class Lobby : MonoBehaviourPunCallbacks
     {
         [SerializeField] TMP_Text _startText;
+        [SerializeField] GameObject _startTextObjext;
         [SerializeField] Button _onlineButton;
         [SerializeField] GameObject _createRoomPanel;
         [SerializeField] GameObject _loadingScene;
@@ -18,12 +19,11 @@ namespace OnlineBeginner.Multiplayer
         private bool _isTwoPlayersInRoom;
         private bool _isCreatedRoom = false;
         private bool _isConnected;
-        private GameObject _startTextObjext;
+        
         private RoomOptions _roomOptions;
         private void Awake()
         {
             PhotonNetwork.AutomaticallySyncScene = true;
-            _startTextObjext = _startText.gameObject;
         }
         private void Start()
         {

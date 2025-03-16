@@ -2296,6 +2296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startText: {fileID: 40273771}
+  _startTextObjext: {fileID: 40273769}
   _onlineButton: {fileID: 1750308770}
   _createRoomPanel: {fileID: 178109492}
   _loadingScene: {fileID: 1094597265}
