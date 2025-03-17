@@ -33,7 +33,6 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
         PhotonNetwork.Instantiate("Player", playersPositionsSender.Positions[1], Quaternion.identity);
-        _photonView = GameObject.FindGameObjectsWithTag("Player")?[0].GetComponent<PhotonView>();
         Debug.Log(_photonView);
     }
     public void LeaveRoom()
@@ -55,7 +54,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.AutomaticallySyncScene = true;
         while (time > 0)
         {
-            _photonView.RPC("AccountingTime", RpcTarget.All, time);
+            _timer.text = $"{time}";
             yield return new WaitForSecondsRealtime(1);
             time--;
             if (time == 0)
@@ -85,11 +84,11 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
     }
 
-    [PunRPC]
-    public void AccountingTime(int time)
-    {
-        _timer.text = $"{time}";
-    }
+    // [PunRPC]
+    // public void AccountingTime(int time)
+    // {
+    //     _timer.text = $"{time}";
+    // }
 
     public void OnEvent(EventData photonEvent)
     {
