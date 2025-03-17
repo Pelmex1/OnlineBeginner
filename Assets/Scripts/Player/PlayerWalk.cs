@@ -36,7 +36,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         _rb = GetComponent<Rigidbody>();
         _endGame = GetComponent<IEndGame>();
         _timeEnd = GetComponent<ITimeEnd>();
-        
+
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(_endGame);
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
@@ -59,10 +59,10 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     }
     private void FixedUpdate()
     {
-        if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd != true)
+        if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd)
         {
             _playerCamera.enabled = true;
-            if(Speed != 0) {Speed += PLUS_TO_SPEED;}
+            if (Speed != 0) { Speed += PLUS_TO_SPEED; }
             _horizontal = Input.GetAxisRaw("Horizontal");
             ChangePosition(_horizontal);
             if (LocalPosition.Value != transform.position.z)
@@ -75,9 +75,9 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     }
     private void ChangePosition(float horizontal)
     {
-        if (horizontal == 0 || _cooldown) 
+        if (horizontal == 0 || _cooldown)
         {
-            return; 
+            return;
         }
         LinkedListNode<float> pos;
         if (horizontal == 1)
@@ -120,8 +120,8 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         object[] data = new object[]
-        {       
-              
+        {
+
         };
 
         RaiseEventOptions raiseEventOptions = new()
@@ -134,7 +134,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         {
             Reliability = true
         };
-        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>(); 
+        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>();
         playerWalk.Init();
         PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
     }

@@ -22,8 +22,9 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private PhotonView _photonView;
 
 
-    public void Init(){
-        _photonView = GetComponent<PhotonView>();
+    public void Init()
+    {
+        _photonView = GameObject.FindGameObjectWithTag("Player")?.GetComponent<PhotonView>();
         _timer = _timeObject.GetComponent<TMP_Text>();
         _startGame = _startTextObject.GetComponent<IStartGame>();
         _playerWalk = new List<IPlayerWalk>();
@@ -32,8 +33,8 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
-        PhotonNetwork.Instantiate("Player",playersPositionsSender.Positions[1],Quaternion.identity);
-    } 
+        PhotonNetwork.Instantiate("Player", playersPositionsSender.Positions[1], Quaternion.identity);
+    }
     public void LeaveRoom()
     {
         PhotonNetwork.LeaveRoom();
@@ -45,15 +46,18 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Debug.Log("Player Entered scene");
-        
+
     }
-    private IEnumerator StartOcklock(){
+    private IEnumerator StartOcklock()
+    {
         int time = 5;
-        while(time > 0){
+        while (time > 0)
+        {
             _photonView.RPC("AccountingTime", RpcTarget.All, time);
             yield return new WaitForSecondsRealtime(1);
             time--;
-            if(time == 0){
+            if (time == 0)
+            {
                 _timeObject.SetActive(false);
                 _startTextObject.SetActive(true);
                 _startGame.StartAnimation();
@@ -61,8 +65,8 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
             Debug.Log(time);
         }
         object[] data = new object[]
-        {       
-              
+        {
+
         };
 
         RaiseEventOptions raiseEventOptions = new()
@@ -79,7 +83,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
     }
     [PunRPC]
-    void AccountingTime(int time) 
+    void AccountingTime(int time)
     {
         _timer.text = $"{time}";
     }
@@ -89,13 +93,13 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         if (photonEvent.Code == StringConstants.OnPhotonPlayerSpawned)
         {
             _players += 1;
-            if(_players == PhotonNetwork.CurrentRoom.MaxPlayers)
+            if (_players == PhotonNetwork.CurrentRoom.MaxPlayers)
             {
                 StartCoroutine(StartOcklock());
             }
         }
     }
-    
+
 
     private void OnEnable()
     {
@@ -105,6 +109,6 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private void OnDisable()
     {
         base.OnDisable();
-        PhotonNetwork.RemoveCallbackTarget(this);        
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 }
