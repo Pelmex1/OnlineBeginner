@@ -19,6 +19,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private TMP_Text _timer;
     private IStartGame _startGame;
     private int _players = 0;
+    private GameObject[] _playersObjects = new GameObject[2];
     private PhotonView[] _photonView = new PhotonView[2];
 
 
@@ -33,9 +34,10 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
         PhotonNetwork.Instantiate("Player", playersPositionsSender.Positions[1], Quaternion.identity);
+        _playersObjects = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < 2; i++)
         {
-            _photonView[i] = GameObject.FindGameObjectsWithTag("Player")[i].GetComponent<PhotonView>();
+            _photonView[i] = _playersObjects[i].GetComponent<PhotonView>();
         }
         Debug.Log(_photonView);
     }
