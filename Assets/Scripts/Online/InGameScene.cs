@@ -31,6 +31,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
+        PhotonNetwork.Instantiate("Player", playersPositionsSender.Positions[1], Quaternion.identity);
     }
     public void LeaveRoom()
     {
