@@ -15,17 +15,11 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] private GameObject _timeObject;
     [SerializeField] private GameObject _startTextObject;
     private EventBus _eventBus;
-    private List<IPlayerWalk> _playerWalk;
-    private TMP_Text _timer;
-    private IStartGame _startGame;
     private int _players = 0;
 
 
     public void Init()
     {
-        _timer = _timeObject.GetComponent<TMP_Text>();
-        _startGame = _startTextObject.GetComponent<IStartGame>();
-        _playerWalk = new List<IPlayerWalk>();
         GetPointsOfSpawn getPointsOfSpawn = new();
         IPlayersPositionsSender playersPositionsSender = new();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
@@ -49,18 +43,11 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private IEnumerator StartOcklock()
     {
         int time = 5;
-        PhotonNetwork.AutomaticallySyncScene = true;
         while (time > 0)
         {
-            _timer.text = $"{time}";
+            _eventBus.Invoke(new IStartTimer(time));
             yield return new WaitForSecondsRealtime(1);
             time--;
-            if (time == 0)
-            {
-                _timeObject.SetActive(false);
-                _startTextObject.SetActive(true);
-                _startGame.StartAnimation();
-            }
             Debug.Log(time);
         }
         object[] data = new object[]
@@ -82,11 +69,6 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
     }
 
-    // [PunRPC]
-    // public void AccountingTime(int time)
-    // {
-    //     _timer.text = $"{time}";
-    // }
 
     public void OnEvent(EventData photonEvent)
     {

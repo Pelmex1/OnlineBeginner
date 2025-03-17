@@ -4,11 +4,20 @@ using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
+using CustomEventBus;
+using OnlineBeginner.EventBus.Signals;
+using ExitGames.Client.Photon;
+using OnlineBeginner.Consts;
+using System.Collections;
+using Photon.Realtime;
 
-public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
+public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
 {
     private const float VolumeOn = -20f;
     private const float VolumeOff = -80f;
+    private const float _startScale = 0.1f;
+    private const float _endScale = 1f;
+    private const float _duration = 1f;
     [SerializeField] private AudioSource audioSources;
     [SerializeField] private AudioMixer mainAudioMixer;
     [SerializeField] private Button soundToggleButton;
@@ -17,7 +26,11 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
     [SerializeField] private TMP_Text _timeText;
     [SerializeField] TMP_Text _bestTimeText;
     [SerializeField] TMP_Text _yourTimeText;
-
+    [SerializeField] private TMP_Text _startTimer;
+    [SerializeField] private GameObject _timeObject;
+    [SerializeField] private GameObject _startTextObject;
+    [SerializeField] private Transform _startTextTransform;
+    private EventBus _eventBus;
     private bool isSoundActive = false;
     private bool isEnd = false;
     private float time = 0;
@@ -26,6 +39,8 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
     {
         InitializeAudioSettings();
         Time.timeScale = 1f;
+        _eventBus = ServiceLocator.Current.Get<EventBus>();
+        _eventBus.Subscribe<IStartTimer>(AccountingTime);
     }
     private void Update()
     {
@@ -94,9 +109,45 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd
         PhotonView photonView = PhotonView.Get(this);
         photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
     }
-    [PunRPC]
-    private void PlayBttSound()
+    private IEnumerator StartTextAnimation()
     {
-        audioSources.Play();
+        float elapsedTime = 0f;
+        Vector3 initialScale = Vector3.one * _startScale;
+        Vector3 finalScale = Vector3.one * _endScale;
+
+        while (elapsedTime < _duration)
+        {
+            _startTextTransform.localScale = Vector3.Lerp(initialScale, finalScale, elapsedTime / _duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        _startTextTransform.localScale = finalScale;
+        gameObject.SetActive(false);
+    }
+    public void AccountingTime(IStartTimer value)
+    {
+        _startTimer.text = $"{value.time}";
+    }
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == StringConstants.ON_MATCH_START)
+        {
+            if (time == 0)
+            {
+                _timeObject.SetActive(false);
+                _startTextObject.SetActive(true);
+                StartCoroutine(StartTextAnimation());
+            }
+        }
+    }
+    void OnEnable()
+    {
+        base.OnEnable();
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+    void OnDisable()
+    {
+        base.OnDisable();
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 }
