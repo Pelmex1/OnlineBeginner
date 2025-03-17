@@ -82,11 +82,13 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         Debug.Log("start?");
         PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
     }
+
     [PunRPC]
-    void AccountingTime(int time)
+    public void AccountingTime(int time)
     {
         _timer.text = $"{time}";
     }
+
     public void OnEvent(EventData photonEvent)
     {
         Debug.Log("GET PLAYER");
