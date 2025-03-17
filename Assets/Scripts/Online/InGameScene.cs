@@ -11,10 +11,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
-{
-    [SerializeField] private GameObject _timeObject;
-    [SerializeField] private GameObject _startTextObject;
-    private EventBus _eventBus;
+{    private EventBus _eventBus;
     private int _players = 0;
 
 
@@ -72,11 +69,8 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void OnEvent(EventData photonEvent)
     {
-        Debug.Log("GET PLAYER");
-        Debug.Log(photonEvent.Code);
         if (photonEvent.Code == StringConstants.OnPhotonPlayerSpawned)
         {
-            Debug.Log("GET PLAYER1");
             _players += 1;
             if (_players == PhotonNetwork.CurrentRoom.MaxPlayers)
             {
