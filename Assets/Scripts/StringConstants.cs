@@ -1,3 +1,6 @@
+using System;
+using Photon.Pun.Demo.SlotRacer.Utils;
+
 namespace OnlineBeginner.Consts
 {
     public static class StringConstants
@@ -7,5 +10,6 @@ namespace OnlineBeginner.Consts
         public const string NAME_OBSTACLE = "Obstacle";
         public const byte OnPhotonPlayerSpawned = 1;
         public const byte ON_MATCH_START = 2;
+        public const byte ON_END_GAME = 3;
     }
 }

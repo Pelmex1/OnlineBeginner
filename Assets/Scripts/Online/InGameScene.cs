@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CustomEventBus;
 using ExitGames.Client.Photon;
+using OnlineBeginner.Abstraction.Signals;
 using OnlineBeginner.Consts;
 using OnlineBeginner.EventBus.Signals;
 using Photon.Pun;
@@ -13,6 +14,7 @@ using UnityEngine.SceneManagement;
 public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
 {    private EventBus _eventBus;
     private int _players = 0;
+    private int _endingPLayers = 0;
 
 
     public void Init()
@@ -22,6 +24,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
+        _eventBus.Subscribe<EndingPlayerSignal>(ChangePosition);
         PhotonNetwork.Instantiate("Player", playersPositionsSender.Positions[1], Quaternion.identity);
     }
     public void LeaveRoom()
@@ -37,6 +40,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         Debug.Log("Player Entered scene");
 
     }
+    private void ChangePosition(EndingPlayerSignal endingPlayerSignal) => endingPlayerSignal.PlaceOfPlayer = _endingPLayers;
     private IEnumerator StartOcklock()
     {
         int time = 5;
@@ -76,6 +80,10 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 StartCoroutine(StartOcklock());
             }
+        }
+        if(photonEvent.Code == StringConstants.ON_END_GAME)
+        {
+            _endingPLayers++;
         }
     }
 
