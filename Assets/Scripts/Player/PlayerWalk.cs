@@ -59,7 +59,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     }
     private void FixedUpdate()
     {
-        if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd)
+        if (PhotonNetwork.IsConnected && photonView.IsMine && IsEnd == false)
         {
             _playerCamera.enabled = true;
             if (Speed != 0) { Speed += PLUS_TO_SPEED; }
