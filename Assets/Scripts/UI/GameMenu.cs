@@ -40,7 +40,6 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
     {
         InitializeAudioSettings();
         Time.timeScale = 1f;
-        _eventBus = ServiceLocator.Current.Get<EventBus>();
     }
     private void Update()
     {
@@ -128,27 +127,36 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
     {
         _startTimer.text = $"{value}";
     }
-    public void OnEvent(EventData photonEvent)
-    {
-        if (photonEvent.Code == StringConstants.ON_MATCH_START)
+    private void Proccesor(int Code, object[] data){
+        if (Code == StringConstants.ON_MATCH_START)
         {
             _timeObject.SetActive(false);
             _startTextObject.SetActive(true);
             StartCoroutine(StartTextAnimation());
         }
-        if (photonEvent.Code == StringConstants.SEND_TIME)
+        if (Code == StringConstants.SEND_TIME)
         {
-            object[] data = (object[])photonEvent.CustomData;
             AccountingTime((int)data[0]);
         }
     }
+    public void OnEvent(EventData photonEvent)
+    {
+        object[] data = (object[])photonEvent.CustomData;
+        Proccesor(photonEvent.Code,data);
+    }
+    private void OnEventSim(IRaiseEventSimulator raiseEventSimulator){
+        Proccesor(raiseEventSimulator.eventData.Code,raiseEventSimulator.CustomData);
+    }
     void OnEnable()
     {
+        _eventBus = ServiceLocator.Current.Get<EventBus>();
+        _eventBus.Subscribe<IRaiseEventSimulator>(OnEventSim);
         base.OnEnable();
         PhotonNetwork.AddCallbackTarget(this);
     }
     void OnDisable()
     {
+        _eventBus.Unsubscribe<IRaiseEventSimulator>(OnEventSim);
         base.OnDisable();
         PhotonNetwork.RemoveCallbackTarget(this);
     }

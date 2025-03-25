@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class MainMenu : MonoBehaviourPunCallbacks
 {
@@ -45,7 +46,18 @@ public class MainMenu : MonoBehaviourPunCallbacks
     public void Play()
     {
         PhotonNetwork.Disconnect();
+    }
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        RoomOptions _roomOptions = new()
+            {
+                MaxPlayers = 1,
+                IsOpen = false,
+                IsVisible = false
+            };
+        base.OnDisconnected(cause);
         PhotonNetwork.OfflineMode = true;
+        PhotonNetwork.CreateRoom("OfflineLobby",_roomOptions);
         SceneManager.LoadScene("GameScene");
     }
 

@@ -22,6 +22,7 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         GetPointsOfSpawn getPointsOfSpawn = new();
         IPlayersPositionsSender playersPositionsSender = new();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
+        _eventBus.Subscribe<IRaiseEventSimulator>(OnEventSim);
         _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
         _eventBus.Subscribe<EndingPlayerSignal>(ChangePosition);
@@ -51,33 +52,50 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
             {
                 time
             };  
-            PhotonNetwork.RaiseEvent(StringConstants.SEND_TIME, data1, new RaiseEventOptions { Receivers = ReceiverGroup.All }, new SendOptions { Reliability = true });
+            if(!PhotonNetwork.OfflineMode)
+            {
+                PhotonNetwork.RaiseEvent(StringConstants.SEND_TIME, data1, new RaiseEventOptions { Receivers = ReceiverGroup.All }, new SendOptions { Reliability = true });
+            } else {
+                var Eventcode = new EventData
+                {
+                    Code = StringConstants.SEND_TIME,
+                };
+                IRaiseEventSimulator raiseEvent = new(Eventcode,data1);
+                _eventBus.Invoke(raiseEvent);
+            }
             //_eventBus.Invoke(new IStartTimer(time));
             yield return new WaitForSecondsRealtime(1);
             time--;
         }
-
         object[] data = new object[]
         {
-        
-        };  
-        RaiseEventOptions raiseEventOptions = new()
-        {
-            Receivers = ReceiverGroup.All,
-            CachingOption = EventCaching.AddToRoomCacheGlobal
-        };
+            
+        }; 
+        if(!PhotonNetwork.OfflineMode){
+ 
+            RaiseEventOptions raiseEventOptions = new()
+            {
+                Receivers = ReceiverGroup.All,
+                CachingOption = EventCaching.AddToRoomCacheGlobal
+            };
 
-        SendOptions sendOptions = new()
-        {
-            Reliability = true
-        };
-        PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
+            SendOptions sendOptions = new()
+            {
+                Reliability = true
+            };
+            PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
+        } else {
+            var Eventcode = new EventData
+            {
+                Code = StringConstants.ON_MATCH_START
+            };
+            IRaiseEventSimulator raiseEvent = new(Eventcode,data);
+            _eventBus.Invoke(raiseEvent);
+        }
     }
 
-
-    public void OnEvent(EventData photonEvent)
-    {
-        if (photonEvent.Code == StringConstants.OnPhotonPlayerSpawned)
+    private void Processor(int Code){
+        if (Code == StringConstants.OnPhotonPlayerSpawned)
         {
             _players += 1;
             if (_players == PhotonNetwork.CurrentRoom.MaxPlayers)
@@ -85,12 +103,18 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
                 StartCoroutine(StartOcklock());
             }
         }
-        if(photonEvent.Code == StringConstants.ON_END_GAME)
+        if(Code == StringConstants.ON_END_GAME)
         {
             _endingPLayers++;
         }
     }
-
+    public void OnEvent(EventData photonEvent)
+    {
+        Processor(photonEvent.Code);
+    }
+    private void OnEventSim(IRaiseEventSimulator raiseEventSimulator){
+        Processor(raiseEventSimulator.eventData.Code);
+    }
 
     private void OnEnable()
     {

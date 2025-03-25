@@ -36,11 +36,15 @@ public class EndGame : MonoBehaviour, IEndGame
                 _infoText.text = "You lost";
                 break;
         }
-        SendOptions sendOptions = new()
-        {
-            Reliability = true
-        };
-        PhotonNetwork.RaiseEvent(StringConstants.ON_END_GAME, null, new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.AddToRoomCacheGlobal }, sendOptions);
+        if(!PhotonNetwork.OfflineMode){
+            SendOptions sendOptions = new()
+            {
+                Reliability = true
+            };
+            PhotonNetwork.RaiseEvent(StringConstants.ON_END_GAME, null, new RaiseEventOptions { Receivers = ReceiverGroup.All, CachingOption = EventCaching.AddToRoomCacheGlobal }, sendOptions);
+        } else {
+            
+        }
         // изминения в ин Гейм сцене через фотоновский евент
     }
 }

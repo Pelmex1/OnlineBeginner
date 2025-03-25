@@ -26,6 +26,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     private GameObject _canvas;
     private IEndGame _endGame;
     private ITimeEnd _timeEnd;
+    private EventBus _eventBus;
     public void Init()
     {
         _audioListener = GetComponent<AudioListener>();
@@ -120,35 +121,56 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         {
 
         };
+        if(!PhotonNetwork.OfflineMode){
 
-        RaiseEventOptions raiseEventOptions = new()
-        {
-            Receivers = ReceiverGroup.MasterClient,
-            CachingOption = EventCaching.AddToRoomCache
-        };
 
-        SendOptions sendOptions = new()
-        {
-            Reliability = true
-        };
-        IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>();
-        playerWalk.Init();
-        PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
+            RaiseEventOptions raiseEventOptions = new()
+            {
+                Receivers = ReceiverGroup.MasterClient,
+                CachingOption = EventCaching.AddToRoomCache
+            };
+
+            SendOptions sendOptions = new()
+            {
+                Reliability = true
+            };
+            IPlayerWalk playerWalk = info.photonView.gameObject.GetComponent<IPlayerWalk>();
+            playerWalk.Init();
+            PhotonNetwork.RaiseEvent(StringConstants.OnPhotonPlayerSpawned, data, raiseEventOptions, sendOptions);
+        } else {
+            var Eventcode = new EventData
+            {
+                Code = StringConstants.OnPhotonPlayerSpawned
+            };
+            IRaiseEventSimulator raiseEvent = new(Eventcode, data);
+            _eventBus.Invoke(raiseEvent);
+        }
     }
-    public void OnEvent(EventData photonEvent)
+    private void Processor(int Code)
     {
-        if (photonEvent.Code == StringConstants.ON_MATCH_START)
+        if (Code == StringConstants.ON_MATCH_START)
         {
             Speed = 1;
         }
     }
+    public void OnEvent(EventData photonEvent)
+    {
+        Processor(photonEvent.Code);
+    }
+    private void OnEventSim(IRaiseEventSimulator raiseEventSimulator){
+        Processor(raiseEventSimulator.eventData.Code);
+    }
     private void OnEnable()
     {
+        _eventBus = ServiceLocator.Current.Get<EventBus>();
+        _eventBus.Subscribe<IRaiseEventSimulator>(OnEventSim);
+        Init();
         PhotonNetwork.AddCallbackTarget(this);
     }
 
     private void OnDisable()
     {
+        _eventBus.Unsubscribe<IRaiseEventSimulator>(OnEventSim);
         PhotonNetwork.RemoveCallbackTarget(this);
     }
 }
