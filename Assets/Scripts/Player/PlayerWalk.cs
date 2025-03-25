@@ -19,7 +19,6 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     private LinkedListNode<float> LocalPosition;
     private readonly float _index = 5;
     private bool _cooldown = false;
-    private EventBus _eventBus;
     private bool IsEnd = false;
     private AudioListener _audioListener;
     private CameraWork _cameraWork;
@@ -36,9 +35,7 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
         _rb = GetComponent<Rigidbody>();
         _endGame = GetComponent<IEndGame>();
         _timeEnd = GetComponent<ITimeEnd>();
-
-        _eventBus = ServiceLocator.Current.Get<EventBus>();
-        _eventBus.Invoke(_endGame);
+        _endGame.Init();
         positions = new LinkedList<float>(new[] { transform.position.z - _index, transform.position.z, transform.position.z + _index });
         LocalPosition = PhotonNetwork.IsMasterClient ? positions.First : positions.Last;
         transform.position = new(transform.position.x, transform.position.y, LocalPosition.Value);

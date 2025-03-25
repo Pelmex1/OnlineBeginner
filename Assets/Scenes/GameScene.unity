@@ -1461,9 +1461,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spawnController: {fileID: 432578788}
   _inGameScene: {fileID: 1975004456}
-  _fireworks:
-  - {fileID: 1790158232}
-  - {fileID: 969061935}
 --- !u!4 &1975004455
 Transform:
   m_ObjectHideFlags: 0
@@ -1672,8 +1669,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4957312474518000232, guid: 83ec193fbfbd2e64a8df40a2e53a0e7f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8674119095054129891}
   m_SourcePrefab: {fileID: 100100000, guid: 83ec193fbfbd2e64a8df40a2e53a0e7f, type: 3}
+--- !u!1 &8674119095054129890 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4957312474518000232, guid: 83ec193fbfbd2e64a8df40a2e53a0e7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 8674119095054129889}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8674119095054129891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8674119095054129890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfa30d2bdcbf94743acd2bae694e5767, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fireworks:
+  - {fileID: 1790158232}
+  - {fileID: 969061935}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
