@@ -6,7 +6,7 @@ namespace OnlineBeginner.EventBus.Signals
         public int time;
         public IStartTimer(int value)
         {
-            value = time;
+            time = value;
         }
     }
 }
