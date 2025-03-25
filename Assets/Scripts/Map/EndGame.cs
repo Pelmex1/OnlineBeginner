@@ -13,18 +13,21 @@ public class EndGame : MonoBehaviour, IEndGame
     [SerializeField] private GameObject _endPanel;
     [SerializeField] TMP_Text _infoText;
     ParticleSystem[] _fireworks = new ParticleSystem[2];
-    private int _placeOfPlayer = 0;
+    private EndingPlayerSignal endingPlayerSignal;
+    private int _placeOfPlayer = 1;
     private EventBus _eventBus;
 
     public void Init(ParticleSystem[] fireworks)
     {
         _fireworks = fireworks;
         _eventBus = ServiceLocator.Current.Get<EventBus>();
+        endingPlayerSignal = new();
     }
     public void OpenUI()
     {
         // запрос обычным еветн басом 
-        _eventBus.Invoke(new EndingPlayerSignal(_placeOfPlayer));
+        _eventBus.Invoke(endingPlayerSignal);
+        _placeOfPlayer = endingPlayerSignal.PlaceOfPlayer;
         _endPanel.SetActive(true);
         _fireworks[0].Play();
         _fireworks[1].Play();
