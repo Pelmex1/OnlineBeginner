@@ -26,7 +26,8 @@ public class EndGame : MonoBehaviour, IEndGame
     public void OpenUI()
     {
         // запрос обычным еветн басом 
-        _eventBus.Invoke(endingPlayerSignal);
+        Debug.Log(_eventBus);
+        _eventBus?.Invoke(endingPlayerSignal);
         _placeOfPlayer = endingPlayerSignal.PlaceOfPlayer;
         _endPanel.SetActive(true);
         _fireworks[0].Play();
