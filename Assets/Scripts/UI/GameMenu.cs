@@ -134,12 +134,9 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
     {
         if (photonEvent.Code == StringConstants.ON_MATCH_START)
         {
-            if (_startTime == 0)
-            {
-                _timeObject.SetActive(false);
-                _startTextObject.SetActive(true);
-                StartCoroutine(StartTextAnimation());
-            }
+            _timeObject.SetActive(false);
+            _startTextObject.SetActive(true);
+            StartCoroutine(StartTextAnimation());
         }
     }
     void OnEnable()

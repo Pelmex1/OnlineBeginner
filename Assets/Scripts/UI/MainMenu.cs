@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Photon;
+using Photon.Pun;
 
-public class MainMenu : MonoBehaviour
+public class MainMenu : MonoBehaviourPunCallbacks
 {
     [Header("UI Elements")]
     [SerializeField] private GameObject settingsPanel;
@@ -21,6 +23,7 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         //PlayerPrefs.DeleteAll();
+
         int bestTime = PlayerPrefs.GetInt("BestTime", 200);
         bestTimeText.text = bestTime != 200 ? $"{bestTime}" : $"{0}";
         Time.timeScale = 1f;
@@ -41,6 +44,7 @@ public class MainMenu : MonoBehaviour
 
     public void Play()
     {
+        PhotonNetwork.OfflineMode = true;
         SceneManager.LoadScene("GameScene");
     }
 
