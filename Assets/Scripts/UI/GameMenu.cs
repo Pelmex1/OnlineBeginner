@@ -34,6 +34,7 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
     private bool isSoundActive = false;
     private bool isEnd = false;
     private float time = 0;
+    private int _startTime = 5;
 
     public void Awake()
     {
@@ -127,12 +128,13 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
     public void AccountingTime(IStartTimer value)
     {
         _startTimer.text = $"{value.time}";
+        _startTime = value.time;
     }
     public void OnEvent(EventData photonEvent)
     {
         if (photonEvent.Code == StringConstants.ON_MATCH_START)
         {
-            if (time == 0)
+            if (_startTime == 0)
             {
                 _timeObject.SetActive(false);
                 _startTextObject.SetActive(true);
