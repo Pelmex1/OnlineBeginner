@@ -41,7 +41,6 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
         InitializeAudioSettings();
         Time.timeScale = 1f;
         _eventBus = ServiceLocator.Current.Get<EventBus>();
-        _eventBus.Subscribe<IStartTimer>(AccountingTime);
     }
     private void Update()
     {
@@ -123,12 +122,11 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
             yield return null;
         }
         _startTextTransform.localScale = finalScale;
-        gameObject.SetActive(false);
+        _startTextObject.SetActive(false);
     }
-    public void AccountingTime(IStartTimer value)
+    public void AccountingTime(int value)
     {
-        _startTimer.text = $"{value.time}";
-        _startTime = value.time;
+        _startTimer.text = $"{value}";
     }
     public void OnEvent(EventData photonEvent)
     {
@@ -137,6 +135,11 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
             _timeObject.SetActive(false);
             _startTextObject.SetActive(true);
             StartCoroutine(StartTextAnimation());
+        }
+        if (photonEvent.Code == StringConstants.SEND_TIME)
+        {
+            object[] data = (object[])photonEvent.CustomData;
+            AccountingTime((int)data[0]);
         }
     }
     void OnEnable()

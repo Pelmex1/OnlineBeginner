@@ -44,6 +44,7 @@ public class MainMenu : MonoBehaviourPunCallbacks
 
     public void Play()
     {
+        PhotonNetwork.Disconnect();
         PhotonNetwork.OfflineMode = true;
         SceneManager.LoadScene("GameScene");
     }

@@ -43,19 +43,24 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
     private void ChangePosition(EndingPlayerSignal endingPlayerSignal) => endingPlayerSignal.PlaceOfPlayer = _endingPLayers;
     private IEnumerator StartOcklock()
     {
+
         int time = 5;
         while (time > 0)
         {
-            _eventBus.Invoke(new IStartTimer(time));
+            object[] data1 = new object[]
+            {
+                time
+            };  
+            PhotonNetwork.RaiseEvent(StringConstants.SEND_TIME, data1, new RaiseEventOptions { Receivers = ReceiverGroup.All }, new SendOptions { Reliability = true });
+            //_eventBus.Invoke(new IStartTimer(time));
             yield return new WaitForSecondsRealtime(1);
             time--;
-            Debug.Log(time);
         }
+
         object[] data = new object[]
         {
-
-        };
-
+        
+        };  
         RaiseEventOptions raiseEventOptions = new()
         {
             Receivers = ReceiverGroup.All,
@@ -66,7 +71,6 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             Reliability = true
         };
-        Debug.Log("start?");
         PhotonNetwork.RaiseEvent(StringConstants.ON_MATCH_START, data, raiseEventOptions, sendOptions);
     }
 
