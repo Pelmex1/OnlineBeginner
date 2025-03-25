@@ -14,7 +14,7 @@ using UnityEngine.SceneManagement;
 public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
 {    private EventBus _eventBus;
     private int _players = 0;
-    private int _endingPLayers = 1;
+    private int _endingPLayers = 0;
 
 
     public void Init()

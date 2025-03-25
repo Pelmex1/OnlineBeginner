@@ -25,10 +25,11 @@ public class EndGame : MonoBehaviour, IEndGame
         // запрос обычным еветн басом 
         _eventBus?.Invoke(endingPlayerSignal);
         _placeOfPlayer = endingPlayerSignal.PlaceOfPlayer;
+        Debug.Log(_placeOfPlayer);
         _endPanel.SetActive(true);
         switch (_placeOfPlayer)
         {
-            case 1:
+            case 0:
                 _infoText.text = "You won";
                 break;
             case 2:
