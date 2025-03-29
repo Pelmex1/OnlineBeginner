@@ -5,6 +5,7 @@ using TMPro;
 using System.Collections;
 using OnlineBeginner.Consts;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 namespace OnlineBeginner.Multiplayer
 {
     public class Lobby : MonoBehaviourPunCallbacks
@@ -19,6 +20,7 @@ namespace OnlineBeginner.Multiplayer
         private bool _isTwoPlayersInRoom;
         private bool _isCreatedRoom = false;
         private bool _isConnected;
+
 
         private RoomOptions _roomOptions;
         private void Awake()
@@ -98,9 +100,12 @@ namespace OnlineBeginner.Multiplayer
         }
         public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
         {
-            _isTwoPlayersInRoom = false;
-            _roomOptions.IsOpen = true;
-            _roomOptions.IsVisible = true;
+            if(SceneManager.GetActiveScene().name != StringConstants.NAME_GAME_SCENE)
+            {
+                _isTwoPlayersInRoom = false;
+                _roomOptions.IsOpen = true;
+                _roomOptions.IsVisible = true;
+            }   
         }
         private IEnumerator Wait()
         {
@@ -115,7 +120,7 @@ namespace OnlineBeginner.Multiplayer
                     yield return new WaitForSecondsRealtime(1);
                     if (_isTwoPlayersInRoom && i == 1)
                     {
-                        PhotonNetwork.LoadLevel("GameScene");
+                        PhotonNetwork.LoadLevel(StringConstants.NAME_GAME_SCENE);
                     }
                     else
                     {
