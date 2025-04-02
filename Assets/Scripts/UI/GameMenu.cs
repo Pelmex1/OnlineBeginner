@@ -35,7 +35,6 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
     private bool isSoundActive = false;
     private bool isEnd = false;
     private float time = 0;
-    private int _startTime = 5;
 
     public void Awake()
     {
