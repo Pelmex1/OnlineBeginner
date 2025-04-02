@@ -10,6 +10,7 @@ using ExitGames.Client.Photon;
 using OnlineBeginner.Consts;
 using System.Collections;
 using Photon.Realtime;
+using System.Runtime.CompilerServices;
 
 public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
 {
@@ -18,7 +19,7 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
     private const float _startScale = 0.1f;
     private const float _endScale = 1f;
     private const float _duration = 1f;
-    [SerializeField] private AudioSource audioSources;
+    [SerializeField] private AudioSource _Tapsound;
     [SerializeField] private AudioMixer mainAudioMixer;
     [SerializeField] private Button soundToggleButton;
     [SerializeField] private Sprite soundOnSprite;
@@ -67,7 +68,7 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
         if (soundStatus == 1)
         {
             mainAudioMixer.SetFloat("MainVolume", VolumeOn);
-            audioSources.Play();
+            _Tapsound.Play();
         }
         else
         {
@@ -103,10 +104,7 @@ public class GameMenu : MonoBehaviourPunCallbacks, ITimeEnd, IOnEventCallback
     }
     private void PlaySoundForSingleClient()
     {
-        //audioSources.Play();
-        int playerId = PhotonNetwork.LocalPlayer.ActorNumber;
-        PhotonView photonView = PhotonView.Get(this);
-        photonView.RPC("PlayBttSound", PhotonNetwork.CurrentRoom.GetPlayer(playerId));
+        _Tapsound.Play();
     }
     private IEnumerator StartTextAnimation()
     {
