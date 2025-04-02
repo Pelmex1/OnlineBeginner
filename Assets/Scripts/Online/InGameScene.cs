@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using CustomEventBus;
 using ExitGames.Client.Photon;
 using OnlineBeginner.Abstraction.Signals;
@@ -7,7 +6,6 @@ using OnlineBeginner.Consts;
 using OnlineBeginner.EventBus.Signals;
 using Photon.Pun;
 using Photon.Realtime;
-using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,13 +17,12 @@ public class InGameScene : MonoBehaviourPunCallbacks, IOnEventCallback
 
     public void Init()
     {
-        GetPointsOfSpawn getPointsOfSpawn = new();
         IPlayersPositionsSender playersPositionsSender = new();
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Subscribe<IRaiseEventSimulator>(OnEventSim);
-        _eventBus.Invoke(getPointsOfSpawn);
         _eventBus.Invoke(playersPositionsSender);
         _eventBus.Subscribe<EndingPlayerSignal>(ChangePosition);
+        Debug.Log(playersPositionsSender.Positions[1]);
         PhotonNetwork.Instantiate("Player", playersPositionsSender.Positions[1], Quaternion.identity);
     }
     public void LeaveRoom()

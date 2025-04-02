@@ -164,7 +164,6 @@ public class PlayerWalk : MonoBehaviourPun, IPlayerWalk, IPunInstantiateMagicCal
     {
         _eventBus = ServiceLocator.Current.Get<EventBus>();
         _eventBus.Subscribe<IRaiseEventSimulator>(OnEventSim);
-        Init();
         PhotonNetwork.AddCallbackTarget(this);
     }
 
